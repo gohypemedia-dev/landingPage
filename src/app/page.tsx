@@ -1,27 +1,31 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
-import { CartItem, CurrencyCode, Product, ProductFinish } from "@/types";
-import { PRODUCTS } from "@/data/products";
+import { useRouter } from "next/navigation";
+import { CurrencyCode, Product, ProductFinish } from "@/types";
+import { shopActions, useShopStore } from "@/lib/shopStore";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { AudoProductStage } from "@/components/AudoProductStage";
 import { AtmosphereShowcase } from "@/components/AtmosphereShowcase";
-import { LookbookHotspot } from "@/components/LookbookHotspot";
-import { CategoryFilter, FilterCategory, SortOption } from "@/components/CategoryFilter";
-import { ProductGrid } from "@/components/ProductGrid";
+// import { LookbookHotspot } from "@/components/LookbookHotspot";
 import { Footer } from "@/components/Footer";
 import { StoryCards } from "@/components/StoryCards";
+import { Testimonials } from "@/components/Testimonials";
+import { HomeFaqs } from "@/components/HomeFaqs";
+import { ShopByLook } from "@/components/ShopByLook";
 import { PopularCategories } from "@/components/PopularCategories";
 import { CartDrawer } from "@/components/CartDrawer";
-import { QuickViewModal } from "@/components/QuickViewModal";
 import { SearchModal } from "@/components/SearchModal";
 import { WishlistDrawer } from "@/components/WishlistDrawer";
 import { Toast } from "@/components/Toast";
-import { CategoryBanners } from "@/components/CategoryBanners";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { DealBanner } from "@/components/DealBanner";
+import { BestsellerBanner, bestsellerSlides } from "@/components/BestsellerBanner";
+import { FestiveOfferBanner } from "@/components/FestiveOfferBanner";
+import { AddOnSaleBanner } from "@/components/AddOnSaleBanner";
+import { PromoCarousel } from "@/components/PromoCarousel";
 
 const CustomCursor = dynamic(
   () => import("@/components/CustomCursor").then((mod) => mod.CustomCursor),
@@ -40,25 +44,17 @@ export default function Home() {
   // Currency state - default to INR for Kurnool
   const [currency, setCurrency] = useState<CurrencyCode>("INR");
 
-  // Shortlist / Bag state
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      product: PRODUCTS[0],
-      finish: PRODUCTS[0].finishes[0],
-      quantity: 1,
-    },
-  ]);
+  // Shortlist + inquiry list are shared with every page (saved in the browser)
+  const { items: cartItems, wishlistIds } = useShopStore();
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // Wishlist state
-  const [wishlistIds, setWishlistIds] = useState<string[]>([PRODUCTS[1].id]);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
 
   // Search modal state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Quick View modal state
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  // Clicking a product opens its full detail page
+  const router = useRouter();
+  const openProduct = (p: Product) => router.push(`/product/${p.id}`);
 
   // Toast state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -70,112 +66,25 @@ export default function Home() {
     }, 2800);
   };
 
-  // Filter & Sort state
-  const [activeCategory, setActiveCategory] = useState<FilterCategory>("all");
-  const [sortBy, setSortBy] = useState<SortOption>("featured");
-
-  // Curated 9 products for the 3x3 homepage catalogue grid (removing the incomplete 4th row)
-  const HOMEPAGE_PRODUCTS = useMemo(() => {
-    return PRODUCTS.filter(
-      (p) => p.id !== "serenity-tufted-king-bed" && p.id !== "elysian-grand-living-suite"
-    );
-  }, []);
-
-  // Filter counts
-  const counts = useMemo(() => {
-    return {
-      all: HOMEPAGE_PRODUCTS.length,
-      sofas: HOMEPAGE_PRODUCTS.filter((p) => p.category === "sofas").length,
-      recliners: HOMEPAGE_PRODUCTS.filter((p) => p.category === "recliners").length,
-      beds: HOMEPAGE_PRODUCTS.filter((p) => p.category === "beds").length,
-      dining: HOMEPAGE_PRODUCTS.filter((p) => p.category === "dining").length,
-      curtains: HOMEPAGE_PRODUCTS.filter((p) => p.category === "curtains").length,
-      featured: HOMEPAGE_PRODUCTS.filter((p) => p.featured).length,
-    };
-  }, [HOMEPAGE_PRODUCTS]);
-
-  // Filtered & Sorted products
-  const displayProducts = useMemo(() => {
-    let result = [...HOMEPAGE_PRODUCTS];
-
-    if (activeCategory === "sofas") {
-      result = result.filter((p) => p.category === "sofas");
-    } else if (activeCategory === "recliners") {
-      result = result.filter((p) => p.category === "recliners");
-    } else if (activeCategory === "beds") {
-      result = result.filter((p) => p.category === "beds");
-    } else if (activeCategory === "dining") {
-      result = result.filter((p) => p.category === "dining");
-    } else if (activeCategory === "curtains") {
-      result = result.filter((p) => p.category === "curtains");
-    } else if (activeCategory === "featured") {
-      result = result.filter((p) => p.featured);
-    }
-
-    if (sortBy === "price-asc") {
-      result.sort((a, b) => (a.priceINR || a.priceUSD * 83.5) - (b.priceINR || b.priceUSD * 83.5));
-    } else if (sortBy === "price-desc") {
-      result.sort((a, b) => (b.priceINR || b.priceUSD * 83.5) - (a.priceINR || a.priceUSD * 83.5));
-    } else if (sortBy === "rating") {
-      result.sort((a, b) => b.rating - a.rating);
-    }
-
-    return result;
-  }, [HOMEPAGE_PRODUCTS, activeCategory, sortBy]);
-
-  // Cart operations
+  // Enquiry list + shortlist operations
   const handleAddToCart = (product: Product, finish: ProductFinish, quantity = 1) => {
-    setCartItems((prev) => {
-      const existingIndex = prev.findIndex(
-        (item) => item.product.id === product.id && item.finish.id === finish.id
-      );
-      if (existingIndex > -1) {
-        const copy = [...prev];
-        copy[existingIndex].quantity += quantity;
-        return copy;
-      }
-      return [...prev, { product, finish, quantity }];
-    });
-    showToast(`Added ${product.name} to enquiry list`);
+    shopActions.addItem(product, finish, quantity);
+    showToast(`Added ${product.name} to inquiry list`);
   };
 
-
-  const handleUpdateQuantity = (index: number, quantity: number) => {
-    if (quantity <= 0) {
-      handleRemoveCartItem(index);
-      return;
-    }
-    setCartItems((prev) => {
-      const copy = [...prev];
-      copy[index].quantity = quantity;
-      return copy;
-    });
-  };
+  const handleUpdateQuantity = (index: number, quantity: number) => shopActions.updateQuantity(index, quantity);
 
   const handleRemoveCartItem = (index: number) => {
     const item = cartItems[index];
-    setCartItems((prev) => prev.filter((_, i) => i !== index));
-    if (item) {
-      showToast(`Removed ${item.product.name} from list`);
-    }
+    shopActions.removeItem(index);
+    if (item) showToast(`Removed ${item.product.name} from list`);
   };
 
-  const handleClearCart = () => {
-    setCartItems([]);
-  };
+  const handleClearCart = () => shopActions.clearItems();
 
-  // Wishlist operations
   const handleToggleWishlist = (product: Product) => {
-    setWishlistIds((prev) => {
-      const exists = prev.includes(product.id);
-      if (exists) {
-        showToast(`Removed ${product.name} from shortlisted favourites`);
-        return prev.filter((id) => id !== product.id);
-      } else {
-        showToast(`Shortlisted ${product.name} to favourites`);
-        return [...prev, product.id];
-      }
-    });
+    const added = shopActions.toggleWishlist(product);
+    showToast(added ? `Shortlisted ${product.name}` : `Removed ${product.name} from shortlist`);
   };
 
   const handleMoveToCart = (product: Product) => {
@@ -185,6 +94,18 @@ export default function Home() {
   };
 
   const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Shared props for the three product stages (New Designs, Best Sellers, Online Exclusive)
+  const stageProps = {
+    currency,
+    wishlistIds,
+    onToggleWishlist: handleToggleWishlist,
+    onQuickView: openProduct,
+    onAddToCart: (p: Product, f: ProductFinish) => {
+      handleAddToCart(p, f, 1);
+      setIsCartOpen(true);
+    },
+  };
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -209,80 +130,52 @@ export default function Home() {
         {/* 1. Hero with Cinematic Preserved Video & 3D Scroll-Linked Scaling */}
         <Hero />
 
+        {/* One banner slider: bestsellers, Diwali festive offers & Add-On sale */}
+        <PromoCarousel
+          label="Featured collections and offers"
+          slides={[
+            ...bestsellerSlides.map((s, i) => <BestsellerBanner key={s.href} slide={s} priority={i === 0} />),
+            <FestiveOfferBanner key="diwali" />,
+            <AddOnSaleBanner key="add-on" />,
+          ]}
+        />
+
+        {/* Limited time deal, trust badges & coupon banner */}
+        <DealBanner />
+
         {/* Popular Categories (circles) */}
         <PopularCategories />
 
-        {/* 2. Signature 3-Column AUDO Product Stage */}
-        <AudoProductStage
-          currency={currency}
-          wishlistIds={wishlistIds}
-          onToggleWishlist={handleToggleWishlist}
-          onQuickView={setQuickViewProduct}
-          onAddToCart={(p, f) => {
-            handleAddToCart(p, f, 1);
-            setIsCartOpen(true);
-          }}
-        />
+        {/* 2. Signature 3-Column AUDO Product Stages: New Designs, then Best Sellers */}
+        <div id="collection" />
+        <AudoProductStage collection="new" title="New Designs" {...stageProps} />
+        <AudoProductStage collection="bestsellers" title="Best Sellers" {...stageProps} />
 
         {/* 4. Full-Bleed Atmosphere Showcases (01 Living, 02 Bedroom, 03 Dining with Floating 3D Cards) */}
         <AtmosphereShowcase
           currency={currency}
-          onQuickView={setQuickViewProduct}
+          onQuickView={openProduct}
           onAddToCart={(p, f) => {
             handleAddToCart(p, f, 1);
             setIsCartOpen(true);
           }}
         >
-          {/* 5. Inspiration drag carousel sits between the two banner pairs */}
-          <LookbookHotspot
+          {/* 5. Inspiration drag carousel sits between the two banner pairs (hidden for now) */}
+          {/* <LookbookHotspot
             currency={currency}
             onQuickView={setQuickViewProduct}
-          />
+          /> */}
         </AtmosphereShowcase>
 
+        {/* Online Exclusive product stage */}
+        <AudoProductStage collection="exclusive" title="Online Exclusive" {...stageProps} />
 
-        {/* 7. Shop by Category / 3 Editorial Discipline Banners */}
-        <CategoryBanners onSelectCategory={setActiveCategory} />
+        {/* Shop By Look reels */}
+        <ShopByLook />
 
-        {/* 8. Catalogue with filters */}
-        <section id="collection" className="catalogue-section">
-          <div className="container" style={{ position: "relative", zIndex: 1 }}>
-            <motion.div
-              className="catalogue-head"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h2>Complete Catalogue</h2>
-              <p>
-                Designed for Comfort. Chosen for Your Home. Discover selected designs, colours and finishes for different spaces and lifestyles.
-              </p>
-            </motion.div>
-
-            {/* Filter Tabs & Sorting */}
-            <CategoryFilter
-              activeCategory={activeCategory}
-              onSelectCategory={setActiveCategory}
-              sortBy={sortBy}
-              onSortChange={setSortBy}
-              counts={counts}
-            />
-
-            {/* 3D Interactive Product Cards Grid */}
-            <ProductGrid
-              products={displayProducts}
-              currency={currency}
-              wishlistIds={wishlistIds}
-              onToggleWishlist={handleToggleWishlist}
-              onQuickView={setQuickViewProduct}
-              onAddToCart={(p, f) => {
-                handleAddToCart(p, f, 1);
-                setIsCartOpen(true);
-              }}
-            />
-          </div>
-        </section>
+        {/* FAQs, then customer testimonials */}
+        <HomeFaqs />
+        <Testimonials />
 
         <StoryCards />
       </main>
@@ -309,7 +202,7 @@ export default function Home() {
         onClose={() => setIsWishlistOpen(false)}
         wishlistIds={wishlistIds}
         currency={currency}
-        onSelectProduct={setQuickViewProduct}
+        onSelectProduct={openProduct}
         onRemoveWishlist={handleToggleWishlist}
         onMoveToCart={handleMoveToCart}
       />
@@ -318,20 +211,7 @@ export default function Home() {
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         currency={currency}
-        onSelectProduct={setQuickViewProduct}
-      />
-
-      {/* Product Detail Page / Quick View Modal */}
-      <QuickViewModal
-        product={quickViewProduct}
-        currency={currency}
-        onClose={() => setQuickViewProduct(null)}
-        onAddToCart={(p, f, q) => {
-          handleAddToCart(p, f, q);
-          setIsCartOpen(true);
-        }}
-        isWishlisted={quickViewProduct ? wishlistIds.includes(quickViewProduct.id) : false}
-        onToggleWishlist={handleToggleWishlist}
+        onSelectProduct={openProduct}
       />
 
       {/* Floating Micro-interaction Toast */}

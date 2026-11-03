@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
+import { getCategoryProducts } from "@/data/categories";
 
 export const metadata: Metadata = {
   title: "Orthopedic Mattresses in Kurnool | Pocket Spring & Latex — Casablanca Sofas",
@@ -17,8 +18,9 @@ export default function MattressesKurnoolPage() {
       subheading="BEDROOM · ORTHOPEDIC SLEEP SYSTEMS"
       heading="Discover Mattresses Engineered for Spine Alignment"
       introduction="Experience deep, restorative sleep free from partner motion disturbance. Our orthopedic sleep systems combine high-tensile carbon pocket springs with natural breathable latex layers to support your spine naturally."
-      filterCategoryKey="beds"
       categoryTiles={tiles}
+      products={getCategoryProducts("mattresses")}
+      heroImage="/images/bedroom-space.jpg"
     />
   );
 }

@@ -14,7 +14,7 @@ export default function SofasKurnoolPage() {
     {
       question: "Can I customize the sofa size and fabric colour for my living room in Kurnool?",
       answer:
-        "Yes, absolutely. At Casablanca Sofas, every sofa can be custom-scaled to your exact room dimensions. You can select from over 120+ stain-resistant European fabrics, bouclés, and genuine Italian leathers at our Bellary Road showroom.",
+        "Yes, absolutely. At Casablanca Sofas, every sofa can be custom-scaled to your exact room dimensions. You can select from over 120+ stain-resistant European fabrics, bouclés, and genuine Italian leathers at our Kurnool showroom.",
     },
     {
       question: "What is the warranty on sofas purchased from Casablanca Sofas?",

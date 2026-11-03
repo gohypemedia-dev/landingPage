@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CurrencyCode, Product, ProductFinish } from "@/types";
-import { PRODUCTS, formatPriceWithCurrency, getWhatsAppEnquiryUrl } from "@/data/products";
+import { formatPriceWithCurrency, getWhatsAppEnquiryUrl } from "@/data/products";
+import { CollectionKey, collectionHref, getCollectionProducts } from "@/data/collections";
 
 interface AudoProductStageProps {
   currency: CurrencyCode;
@@ -13,17 +14,22 @@ interface AudoProductStageProps {
   onToggleWishlist: (p: Product) => void;
   onQuickView: (p: Product) => void;
   onAddToCart?: (p: Product, f: ProductFinish) => void;
+  collection?: CollectionType;
+  title: string;
+  /** Show these products instead of a homepage collection (used on category & product pages) */
+  products?: Product[];
 }
 
-type TabType = "new" | "bestsellers" | "sale" | "all";
+type CollectionType = CollectionKey;
 
-// Interactive 3D Card within the stage
-const AudoCardItem: React.FC<{
+// Interactive 3D Card within the stage (also reused on category & product pages)
+export const AudoCardItem: React.FC<{
   product: Product;
   currency: CurrencyCode;
   isWishlisted: boolean;
   onToggleWishlist: (p: Product) => void;
   onQuickView: (p: Product) => void;
+  onAddToCart?: (p: Product, f: ProductFinish) => void;
   showDivider: boolean;
 }> = ({
   product,
@@ -31,6 +37,7 @@ const AudoCardItem: React.FC<{
   isWishlisted,
   onToggleWishlist,
   onQuickView,
+  onAddToCart,
   showDivider,
 }) => {
   const [selectedFinish, setSelectedFinish] = useState<ProductFinish>(product.finishes[0]);
@@ -220,148 +227,53 @@ const AudoCardItem: React.FC<{
             {formattedPrice}
           </div>
 
-          {/* Instant WhatsApp Action Link - Both Icon and Text */}
-          <a
-            href={getWhatsAppEnquiryUrl(product.name, undefined, selectedFinish.name, formattedPrice)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            aria-label={`Enquire about ${product.name} on WhatsApp`}
-            title="Enquire on WhatsApp"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.4rem",
-              padding: "0.35rem 0.85rem",
-              borderRadius: "999px",
-              backgroundColor: "rgba(24, 134, 75, 0.08)",
-              color: "#18864B",
-              fontSize: "0.6875rem",
-              fontWeight: 600,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              textDecoration: "none",
-              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--color-whatsapp)";
-              e.currentTarget.style.color = "#FFFFFF";
-              e.currentTarget.style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "rgba(24, 134, 75, 0.08)";
-              e.currentTarget.style.color = "#18864B";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-            </svg>
-            <span>Enquire on WhatsApp</span>
-          </a>
+          {/* Actions: WhatsApp on the left, add to inquiry list on the right */}
+          <div className="card-actions" onClick={(e) => e.stopPropagation()}>
+            <a
+              href={getWhatsAppEnquiryUrl(product.name, undefined, selectedFinish.name, formattedPrice)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-action card-action--wa"
+              aria-label={`Enquire about ${product.name} on WhatsApp`}
+              title="Enquire on WhatsApp"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+              </svg>
+              <span>Inquiry</span>
+            </a>
+            {onAddToCart && (
+              <button
+                type="button"
+                className="card-action card-action--add"
+                onClick={() => onAddToCart(product, selectedFinish)}
+                aria-label={`Add ${product.name} to inquiry list`}
+                title="Add to inquiry list"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                  <path d="M3 6h18M12 10v6M9 13h6" />
+                </svg>
+                <span>Add to List</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const STAGE_PRODUCTS: Product[] = [
-  {
-    id: "eave-modular-sofa",
-    name: "Eave Modular Bouclé Sofa",
-    subtitle: "Architectural curves inspired by building eaves with tactile luxury bouclé",
-    category: "sofas",
-    priceUSD: 1250,
-    priceINR: 98000,
-    priceOnEnquiry: false,
-    designer: "Norm Architects for Audo Copenhagen",
-    year: 2025,
-    description: "Taking its name from 'eaves' – the lower edges of a roof that overhang a wall – the Eave Modular Sofa is an architectural piece that curves gently into open-plan spaces.",
-    details: [
-      "Modular components for flexible corner or straight configurations",
-      "Tactile bouclé upholstery with high Martindale rub endurance",
-      "Generous curved internal armrests engineered for lounging",
-    ],
-    dimensions: "W 240 cm x D 96 cm x H 70 cm (Seat Height: 40 cm)",
-    materials: "Kiln-dried solid frame, High-resilience cold foam, Bouclé wool blend",
-    primaryImage: "/images/eave-sofa.jpg",
-    finishes: [
-      { id: "ivory-boucle", name: "Ivory Bouclé", colorHex: "#F2EDE4" },
-      { id: "charcoal", name: "Charcoal Wool", colorHex: "#333538" },
-      { id: "terracotta", name: "Warm Terracotta", colorHex: "#A05A46" },
-    ],
-    rating: 5.0,
-    reviewCount: 38,
-    inStock: true,
-    featured: true,
-  },
-  {
-    id: "echasse-smoked-vase",
-    name: "Échasse Smoked Glass Brass Vase",
-    subtitle: "Mouth-blown drop-shaped smoked glass balanced upon stilted brass legs",
-    category: "objects" as any,
-    priceUSD: 320,
-    priceINR: 24000,
-    priceOnEnquiry: false,
-    designer: "Theresa Rand for Audo Copenhagen",
-    year: 2025,
-    description: "The Échasse Vase reimagines the classic elegance of glass vessels. The French word 'échasse' means stilts – the slender, stilt-like brass legs that suspend the smoked glass form.",
-    details: [
-      "Mouth-blown smoked glass with subtle gradient tinting",
-      "Solid bronzed brass stilt armature with brushed satin finish",
-      "Sculptural presence both empty or arranged with botanical branches",
-    ],
-    dimensions: "Diameter 28 cm x H 60 cm",
-    materials: "Mouth-blown Smoked Glass, Solid Bronzed Brass",
-    primaryImage: "/images/echasse-vase.jpg",
-    finishes: [
-      { id: "smoked-brass", name: "Smoked Glass & Brass", colorHex: "#C5A45D" },
-      { id: "amber-bronze", name: "Amber Glass & Dark Bronze", colorHex: "#4A3326" },
-    ],
-    rating: 4.9,
-    reviewCount: 29,
-    inStock: true,
-    featured: true,
-  },
-  {
-    id: "hashira-ambient-column-lamp",
-    name: "Hashira Ambient Column Lamp",
-    subtitle: "Geometric Japanese lantern inspiration in natural linen and blackened steel",
-    category: "lighting" as any,
-    priceUSD: 410,
-    priceINR: 32000,
-    priceOnEnquiry: false,
-    designer: "Norm Architects for Audo Copenhagen",
-    year: 2026,
-    description: "Taking inspiration from traditional Japanese paper lanterns, Hashira combines a cylindrical silhouette with a translucent linen shade that diffuses light in multiple directions.",
-    details: [
-      "Natural raw woven linen shade casting warm ambient glow",
-      "Blackened ash wood base with tactile brass dimmer dial",
-      "Architectural column geometry suited for bedside or living corners",
-    ],
-    dimensions: "Diameter 24 cm x H 83 cm",
-    materials: "Natural Linen, Blackened Ash, Solid Brass Dial",
-    primaryImage: "/images/hashira-lamp.jpg",
-    finishes: [
-      { id: "raw-linen", name: "Raw Oat Linen", colorHex: "#D8CDBA" },
-      { id: "white-linen", name: "Pure White Linen", colorHex: "#F7F5F0" },
-    ],
-    rating: 4.9,
-    reviewCount: 42,
-    inStock: true,
-    featured: true,
-  },
-];
-
 export const AudoProductStage: React.FC<AudoProductStageProps> = ({
   currency,
   wishlistIds,
   onToggleWishlist,
   onQuickView,
+  onAddToCart,
+  collection = "new",
+  title,
+  products,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabType>("new");
   const [index, setIndex] = useState(0);
 
   const [VISIBLE, setVisible] = useState(3);
@@ -374,81 +286,93 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
   }, []);
 
   const tabProducts = React.useMemo(() => {
-    const all = [...STAGE_PRODUCTS, ...PRODUCTS.filter((p) => !STAGE_PRODUCTS.some((s) => s.id === p.id))];
-    if (activeTab === "bestsellers") return [...all].sort((a, b) => b.reviewCount - a.reviewCount);
-    if (activeTab === "sale") return [...all].sort((a, b) => (a.priceINR ?? a.priceUSD) - (b.priceINR ?? b.priceUSD)).slice(0, 8);
-    return [...STAGE_PRODUCTS, ...all.filter((p) => !STAGE_PRODUCTS.some((s) => s.id === p.id)).sort((a, b) => b.year - a.year)];
-  }, [activeTab]);
+    if (products) return products;
+    return getCollectionProducts(collection);
+  }, [collection, products]);
 
   const maxIndex = Math.max(0, tabProducts.length - VISIBLE);
   const clamped = Math.min(index, maxIndex);
 
+  // Homepage rows auto-advance while on screen (phones, laptops and desktops), so visitors see there are more products.
+  // Any swipe or arrow tap pauses auto-play for a few seconds, and hovering with a mouse pauses it entirely.
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const lastTouch = React.useRef(0);
+  const [inView, setInView] = useState(false);
+  const [tick, setTick] = useState(0);
+  const hovering = React.useRef(false);
+  const autoPlay = !products;
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || !autoPlay) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [autoPlay]);
+
+  useEffect(() => {
+    if (!autoPlay || !inView || maxIndex === 0) return;
+    const id = setTimeout(() => {
+      if (hovering.current || Date.now() - lastTouch.current < 5000) setTick((t) => t + 1); // hovered or recently touched: wait
+      else setIndex(clamped >= maxIndex ? 0 : clamped + 1);
+    }, VISIBLE === 1 ? 3500 : 1500); // phones keep a gentler pace; laptops/desktops move every 1.5s
+    return () => clearTimeout(id);
+  }, [autoPlay, inView, clamped, maxIndex, tick, VISIBLE]);
+
   // Swipe / drag the track sideways to move one card at a time.
   const swipeStart = React.useRef<number | null>(null);
+  // A swipe ends with a click on the card underneath; skip that click so it doesn't open the product
+  const didSwipe = React.useRef(false);
   const onSwipeStart = (e: React.PointerEvent) => {
     swipeStart.current = e.clientX;
+    didSwipe.current = false;
   };
   const onSwipeEnd = (e: React.PointerEvent) => {
     if (swipeStart.current === null) return;
     const dx = e.clientX - swipeStart.current;
     swipeStart.current = null;
     if (Math.abs(dx) < 40) return;
+    didSwipe.current = true;
     setIndex(dx < 0 ? Math.min(maxIndex, clamped + 1) : Math.max(0, clamped - 1));
   };
 
-  const selectTab = (tab: TabType) => {
-    setActiveTab(tab);
-    setIndex(0);
-  };
-
-  const tabs: { key: TabType; label: string }[] = [
-    { key: "new", label: "New Designs" },
-    { key: "bestsellers", label: "Best Sellers" },
-    { key: "sale", label: "Sale" },
-  ];
-
   return (
-    <section id="audo-product-stage" style={{ padding: 0, backgroundColor: "var(--color-canvas)" }}>
+    <section
+      ref={sectionRef}
+      onPointerDownCapture={() => (lastTouch.current = Date.now())}
+      onMouseEnter={() => (hovering.current = true)}
+      onMouseLeave={() => (hovering.current = false)}
+      id={products ? undefined : `audo-product-stage-${collection}`} style={{ padding: 0, backgroundColor: "var(--color-canvas)" }}>
       <div className="audo-stage-container" style={{ background: "#FFFFFF", overflow: "hidden" }}>
-        {/* Header Row: Tabs on Left + Carousel Arrows on Right */}
+        {/* Header Row: Title */}
         <div className="audo-header-row">
-          <div className="audo-header-tabs">
-            {tabs.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => selectTab(t.key)}
-                className={`audo-tab-btn ${activeTab === t.key ? "is-active" : ""}`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-            <button
-              onClick={() => setIndex(Math.max(0, clamped - 1))}
-              disabled={clamped === 0}
-              aria-label="Previous products"
-              className="audo-arrow"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => setIndex(Math.min(maxIndex, clamped + 1))}
-              disabled={clamped >= maxIndex}
-              aria-label="Next products"
-              className="audo-arrow audo-arrow--next"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
+          <h2 className="audo-tab-btn is-active">{title}</h2>
         </div>
 
-        {/* Sliding product track */}
+        {/* Sliding product track, with minimal side arrows centred on the images */}
+        <div className="audo-track-wrap" style={{ "--stage-visible": VISIBLE } as React.CSSProperties}>
+        <button
+          type="button"
+          onClick={() => setIndex(Math.max(0, clamped - 1))}
+          disabled={clamped === 0}
+          aria-label="Previous products"
+          className="audo-side-arrow audo-side-arrow--prev"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={() => setIndex(Math.min(maxIndex, clamped + 1))}
+          disabled={clamped >= maxIndex}
+          aria-label="Next products"
+          className="audo-side-arrow audo-side-arrow--next"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
         <div
           style={{ overflow: "hidden", touchAction: "pan-y" }}
           onPointerDown={onSwipeStart}
@@ -456,11 +380,10 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
           onPointerCancel={() => (swipeStart.current = null)}
         >
           <motion.div
-            key={activeTab}
             className="audo-stage-grid"
             initial={false}
             animate={{ x: `-${(clamped * 100) / tabProducts.length}%` }}
-            transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: VISIBLE === 1 ? 0.75 : 0.5, ease: [0.16, 1, 0.3, 1] }}
             style={{ display: "flex", width: `${(tabProducts.length * 100) / VISIBLE}%`, alignItems: "flex-start" }}
           >
             {tabProducts.map((product, idx) => (
@@ -470,12 +393,14 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
                   currency={currency}
                   isWishlisted={wishlistIds.includes(product.id)}
                   onToggleWishlist={onToggleWishlist}
-                  onQuickView={onQuickView}
+                  onQuickView={(p) => !didSwipe.current && onQuickView(p)}
+                  onAddToCart={onAddToCart}
                   showDivider={idx < tabProducts.length - 1}
                 />
               </div>
             ))}
           </motion.div>
+        </div>
         </div>
 
         {/* Mobile progress, like the reference: 01 / 06 and a bar */}
@@ -492,7 +417,7 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
           </div>
         </div>
 
-        {/* Bottom Row: Shop All Link */}
+        {/* Bottom Row: View All (collection page on the homepage rows, all furniture elsewhere) */}
         <div
           style={{
             borderTop: "1px solid #ECEAE5",
@@ -503,7 +428,7 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
           }}
         >
           <Link
-            href="/furniture"
+            href={products ? "/furniture" : collectionHref(collection)}
             style={{
               fontFamily: "var(--font-sans)",
               fontSize: "0.875rem",
@@ -515,7 +440,7 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
               gap: "0.6rem",
             }}
           >
-            <span>Shop All</span>
+            <span>{products ? "Shop All" : "View All"}</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

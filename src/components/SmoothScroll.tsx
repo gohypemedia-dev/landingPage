@@ -14,7 +14,8 @@ export const SmoothScroll: React.FC = () => {
     const lenis = new Lenis({
       lerp: 0.085,
       smoothWheel: true,
-      anchors: true,
+      // Offset so same-page anchor jumps land below the floating navbar
+      anchors: { offset: -90 },
       allowNestedScroll: true,
     });
 

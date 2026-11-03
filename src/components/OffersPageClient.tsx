@@ -1,39 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import React from "react";
 import { PromotionsSection } from "@/components/PromotionsSection";
 import { WhatsAppCTABanner } from "@/components/WhatsAppCTABanner";
-import { WishlistDrawer } from "@/components/WishlistDrawer";
-import { SearchModal } from "@/components/SearchModal";
-import { CartDrawer } from "@/components/CartDrawer";
-import { Toast } from "@/components/Toast";
-import { CurrencyCode } from "@/types";
+import { ShopShell } from "@/components/shop/ShopShell";
 
-export const OffersPageClient: React.FC = () => {
-  const [currency, setCurrency] = useState<CurrencyCode>("INR");
-  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "var(--color-canvas)" }}>
-      {/* Header */}
-      <Header
-        currency={currency}
-        onCurrencyChange={setCurrency}
-        cartCount={0}
-        wishlistCount={wishlistIds.length}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenWishlist={() => setIsWishlistOpen(true)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-      />
-
-      <main style={{ flex: 1 }}>
+// Uses the shared site shell, so the header shortlist / inquiry list work here too
+export const OffersPageClient: React.FC = () => (
+  <ShopShell>
+    {() => (
+      <>
         {/* Hero Banner */}
         <section
           style={{
@@ -87,43 +63,7 @@ export const OffersPageClient: React.FC = () => {
 
         {/* Consultation Banner */}
         <WhatsAppCTABanner />
-      </main>
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Floating WhatsApp */}
-      <FloatingWhatsApp />
-
-      {/* Modals & Drawers */}
-      <WishlistDrawer
-        isOpen={isWishlistOpen}
-        onClose={() => setIsWishlistOpen(false)}
-        wishlistIds={wishlistIds}
-        currency={currency}
-        onSelectProduct={() => {}}
-        onRemoveWishlist={() => {}}
-        onMoveToCart={() => {}}
-      />
-
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        currency={currency}
-        onSelectProduct={() => {}}
-      />
-
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={[]}
-        currency={currency}
-        onUpdateQuantity={() => {}}
-        onRemoveItem={() => {}}
-        onClearCart={() => {}}
-      />
-
-      <Toast message={toastMessage} />
-    </div>
-  );
-};
+      </>
+    )}
+  </ShopShell>
+);

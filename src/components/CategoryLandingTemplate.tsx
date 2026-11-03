@@ -1,20 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CurrencyCode, Product } from "@/types";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { QuickViewModal } from "@/components/QuickViewModal";
-import { WishlistDrawer } from "@/components/WishlistDrawer";
-import { CartDrawer } from "@/components/CartDrawer";
-import { SearchModal } from "@/components/SearchModal";
-import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { Toast } from "@/components/Toast";
-import { ProductCard3D } from "@/components/ProductCard3D";
-import { ProductGrid } from "@/components/ProductGrid";
-import { PRODUCTS, SHOWROOM_INFO, formatPriceWithCurrency, getProductPDPWhatsAppUrl } from "@/data/products";
+import { Product } from "@/types";
+import { PRODUCTS, SHOWROOM_INFO, formatPriceINR } from "@/data/products";
+import { ShopShell } from "@/components/shop/ShopShell";
+import { ProductTile } from "@/components/shop/ProductTile";
 
 export interface CategoryTile {
   title: string;
@@ -32,361 +24,215 @@ export interface CategoryLandingProps {
   filterCategoryKey?: string;
   categoryTiles: CategoryTile[];
   seoFaqs?: { question: string; answer: string }[];
+  /** Collection pages pass their own product list (kept in this order) and banner */
+  products?: Product[];
+  heroImage?: string;
 }
 
+// Banner image per category
+const HERO_IMAGES: Record<string, string> = {
+  sofas: "/images/mf-signature-curved-living.jpg",
+  recliners: "/images/catalogue-recliner-featured.jpg",
+  beds: "/images/796767853_18093958568640692_8492671734547745348_n.webp",
+  dining: "/images/dining-space.jpg",
+  curtains: "/images/banner-living.jpg",
+};
+const DEFAULT_HERO = "/images/showroom-kurnool-main.jpg";
+
+const PRICE_FILTERS = [
+  { key: "all", label: "All Prices", test: () => true },
+  { key: "u50", label: "Under ₹50,000", test: (n: number) => n < 50000 },
+  { key: "50-100", label: "₹50,000 – ₹1,00,000", test: (n: number) => n >= 50000 && n <= 100000 },
+  { key: "o100", label: "Above ₹1,00,000", test: (n: number) => n > 100000 },
+];
+
+const priceOf = (p: Product) => p.priceINR ?? p.priceUSD * 83.5;
+
 export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
-  categorySlug,
   categoryName,
-  heading,
-  subheading,
   introduction,
   filterCategoryKey,
-  categoryTiles,
   seoFaqs,
+  products,
+  heroImage: heroOverride,
 }) => {
-  const [currency, setCurrency] = useState<CurrencyCode>("INR");
-  const [wishlistIds, setWishlistIds] = useState<string[]>([PRODUCTS[0].id]);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [priceFilter, setPriceFilter] = useState("all");
+  const [sort, setSort] = useState("featured");
+  const [inStockOnly, setInStockOnly] = useState(false);
 
-  // Filter states
-  const [selectedStyle, setSelectedStyle] = useState<string>("all");
-  const [selectedMaterial, setSelectedMaterial] = useState<string>("all");
-  const [selectedSort, setSelectedSort] = useState<string>("featured");
+  const heroImage = heroOverride || (filterCategoryKey && HERO_IMAGES[filterCategoryKey]) || DEFAULT_HERO;
+  // Some pages are already named "All …" (e.g. "All Furniture"), so don't prefix it again
+  const baseName = categoryName.replace(/^All\s+/i, "");
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2800);
-  };
+  const categoryProducts = useMemo(
+    () => products ?? (filterCategoryKey ? PRODUCTS.filter((p) => p.category === filterCategoryKey) : PRODUCTS),
+    [products, filterCategoryKey]
+  );
 
-  const categoryProducts = useMemo(() => {
-    let prods = PRODUCTS;
-    if (filterCategoryKey) {
-      prods = prods.filter((p) => p.category === filterCategoryKey);
-    }
 
-    if (selectedStyle !== "all") {
-      prods = prods.filter((p) => p.details.some((d) => d.toLowerCase().includes(selectedStyle.toLowerCase())));
-    }
-
-    if (selectedSort === "price-asc") {
-      prods = [...prods].sort((a, b) => (a.priceINR || a.priceUSD * 83.5) - (b.priceINR || b.priceUSD * 83.5));
-    } else if (selectedSort === "price-desc") {
-      prods = [...prods].sort((a, b) => (b.priceINR || b.priceUSD * 83.5) - (a.priceINR || a.priceUSD * 83.5));
-    } else if (selectedSort === "rating") {
-      prods = [...prods].sort((a, b) => b.rating - a.rating);
-    }
-
-    return prods;
-  }, [filterCategoryKey, selectedStyle, selectedSort]);
-
-  const handleToggleWishlist = (product: Product) => {
-    setWishlistIds((prev) => {
-      const exists = prev.includes(product.id);
-      if (exists) {
-        showToast(`Removed ${product.name} from shortlist`);
-        return prev.filter((id) => id !== product.id);
-      } else {
-        showToast(`Added ${product.name} to shortlist`);
-        return [...prev, product.id];
-      }
-    });
-  };
+  const gridProducts = useMemo(() => {
+    const test = PRICE_FILTERS.find((f) => f.key === priceFilter)!.test;
+    const list = categoryProducts.filter((p) => test(priceOf(p)) && (!inStockOnly || p.inStock));
+    if (sort === "price-asc") return [...list].sort((a, b) => priceOf(a) - priceOf(b));
+    if (sort === "price-desc") return [...list].sort((a, b) => priceOf(b) - priceOf(a));
+    if (sort === "rating") return [...list].sort((a, b) => b.rating - a.rating);
+    if (sort === "new") return [...list].sort((a, b) => b.year - a.year);
+    if (products) return list; // collections keep their curated order
+    return [...list].sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
+  }, [products, categoryProducts, priceFilter, sort, inStockOnly]);
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "var(--color-canvas)" }}>
-      {/* Header */}
-      <Header
-        currency={currency}
-        onCurrencyChange={setCurrency}
-        cartCount={0}
-        wishlistCount={wishlistIds.length}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenWishlist={() => setIsWishlistOpen(true)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-      />
+    <ShopShell>
+      {({ currency, wishlistIds, toggleWishlist, addToEnquiry }) => (
+        <>
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="shop-crumbs">
+            <Link href="/">Home</Link>
+            <span aria-hidden="true">/</span>
+            <span>{categoryName}</span>
+          </nav>
 
-      <main style={{ flex: 1 }}>
-        {/* Breadcrumb & Hero */}
-        <section
-          style={{
-            padding: "6.5rem 0 3rem",
-            backgroundColor: "#FFFFFF",
-            borderBottom: "1px solid rgba(16, 43, 70, 0.08)",
-          }}
-        >
-          <div className="container">
-            {/* Breadcrumb */}
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-xs tracking-wider uppercase mb-7 text-charcoal/80"
-            >
-              <Link href="/" className="text-navy font-semibold hover:text-gold transition-colors no-underline">
-                Home
-              </Link>
-              <span>/</span>
-              <span className="text-gold font-bold">{categoryName}</span>
-            </nav>
-
-            {/* Title & Introduction */}
-            <div className="max-w-4xl">
-              <span className="block text-xs font-bold uppercase tracking-widest text-gold mb-3">
-                {subheading}
-              </span>
-              <h1
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "clamp(2.4rem, 4.5vw, 3.75rem)",
-                }}
-                className="font-light text-navy leading-tight mb-5"
-              >
-                {heading}
-              </h1>
-              <p className="text-slate-600 text-base md:text-lg leading-relaxed font-light mb-7 max-w-3xl">
-                {introduction}
-              </p>
-
-              {/* Showroom CTA strip */}
-              <div className="inline-flex items-center gap-4 flex-wrap p-3.5 sm:px-5 bg-navy/5 border border-gold/30 rounded">
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-navy font-semibold">
-                  <span className="text-gold">📍</span>
-                  <span>On live display in our 15,000 sq. ft. Kurnool Showroom (Bellary Road)</span>
-                </div>
-                <a
-                  href={`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(
-                    `Hello Casablanca Sofas Kurnool, I am browsing your ${categoryName} catalogue. Please share models on display and current offers.`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-whatsapp py-1.5 px-3.5 text-xs font-semibold tracking-wider rounded"
-                >
-                  ENQUIRE ON WHATSAPP
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 4: Category Sub-Tiles (e.g. 3-seater, 2-seater, sectional, L-shaped) */}
-        {categoryTiles.length > 0 && (
-          <section className="py-12 bg-ivory border-b border-navy/10">
-            <div className="container">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
-                {categoryTiles.map((tile, i) => (
-                  <div
-                    key={i}
-                    className="group relative rounded-md overflow-hidden bg-white border border-navy/10 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                  >
-                    <div className="relative w-full h-32 overflow-hidden">
-                      <Image
-                        src={tile.image}
-                        alt={tile.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-navy/10" />
-                      {tile.tag && (
-                        <span className="absolute top-2 left-2 bg-gold text-navy text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                          {tile.tag}
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-3.5">
-                      <h3
-                        style={{ fontFamily: "var(--font-serif)" }}
-                        className="text-base text-navy leading-tight mb-1"
-                      >
-                        {tile.title}
-                      </h3>
-                      <span className="text-xs text-charcoal/70">
-                        {tile.countText}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Hero banner */}
+          <section className="cl-hero">
+            <div className="cl-hero-inner">
+              <Image src={heroImage} alt={categoryName} fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+              {/* Banner is image-only; the title stays for search engines and screen readers */}
+              <h1 className="sr-only">{categoryName}</h1>
             </div>
           </section>
-        )}
 
-        {/* Section 4: Filters and Product Grid */}
-        <section style={{ padding: "4rem 0 6rem" }}>
-          <div className="container">
-            {/* Filter Bar */}
-            <div className="cat-filter-bar">
-              <div className="cat-filter-controls">
-                <span style={{ fontSize: "0.75rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-navy)", fontWeight: 700 }}>
-                  FILTERS:
-                </span>
-                <select
-                  value={selectedStyle}
-                  onChange={(e) => setSelectedStyle(e.target.value)}
-                  style={{
-                    padding: "0.45rem 0.85rem",
-                    border: "1px solid rgba(16, 43, 70, 0.15)",
-                    borderRadius: "4px",
-                    fontSize: "0.75rem",
-                    color: "var(--color-navy)",
-                    outline: "none",
-                  }}
-                >
-                  <option value="all">All Styles</option>
-                  <option value="teakwood">Burma Teakwood</option>
-                  <option value="bouclé">Bouclé & Velvet</option>
-                  <option value="motorized">Motorized / Recliner</option>
-                </select>
-                <span suppressHydrationWarning style={{ fontSize: "0.75rem", color: "var(--color-charcoal)", opacity: 0.7 }}>
-                  Showing {categoryProducts.length} verified showroom designs
-                </span>
-              </div>
+          {/* No products listed online yet: point to WhatsApp / showroom instead of an empty grid */}
+          {categoryProducts.length === 0 && (
+            <section className="cl-enquire">
+              <h2 className="shop-h2">{baseName}</h2>
+              <p>Our {baseName.toLowerCase()} range is available at our Kurnool showroom. Message us for designs, sizes and prices.</p>
+              <a
+                href={`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(
+                  `Hello Casablanca Sofas Kurnool, please share your ${baseName.toLowerCase()} designs and prices.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cd-btn cd-btn--whatsapp"
+              >
+                Send Inquiry
+              </a>
+            </section>
+          )}
 
-              {/* Sort Selector */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <span style={{ fontSize: "0.75rem", letterSpacing: "0.08em", color: "var(--color-charcoal)", fontWeight: 600 }}>
-                  SORT:
-                </span>
-                <select
-                  value={selectedSort}
-                  onChange={(e) => setSelectedSort(e.target.value)}
-                  style={{
-                    padding: "0.45rem 0.85rem",
-                    border: "1px solid rgba(16, 43, 70, 0.15)",
-                    borderRadius: "4px",
-                    fontSize: "0.75rem",
-                    color: "var(--color-navy)",
-                    fontWeight: 600,
-                    outline: "none",
-                  }}
-                >
-                  <option value="featured">Featured in Kurnool Showroom</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="rating">Highest Customer Rating</option>
-                </select>
+          {/* Full grid with filters */}
+          {categoryProducts.length > 0 && (
+          <section id="all-products" className="cl-all">
+            <div className="cl-toolbar">
+              <h2 className="shop-h2">All {baseName}</h2>
+              <div className="cl-filters">
+                <div className="cl-chips" role="group" aria-label="Filter by price">
+                  {PRICE_FILTERS.map((f) => (
+                    <button
+                      key={f.key}
+                      type="button"
+                      className={priceFilter === f.key ? "is-active" : undefined}
+                      onClick={() => setPriceFilter(f.key)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+                <label className="cl-check">
+                  <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
+                  In stock
+                </label>
+                <label className="cl-sort">
+                  Sort by
+                  <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                    <option value="featured">Recommended</option>
+                    <option value="new">Newest</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="rating">Top Rated</option>
+                  </select>
+                </label>
               </div>
             </div>
 
-            {/* Product Grid */}
-            <ProductGrid
-              products={categoryProducts}
-              currency={currency}
-              wishlistIds={wishlistIds}
-              onToggleWishlist={handleToggleWishlist}
-              onQuickView={setQuickViewProduct}
-              onAddToCart={(p, f) => {
-                setQuickViewProduct(p);
-              }}
-              showShopAll={false}
-            />
+            <p className="cl-count">
+              Showing {gridProducts.length} of {categoryProducts.length} designs
+            </p>
 
-            {/* Local FAQs & Showroom Help for Kurnool Local SEO */}
-            {seoFaqs && seoFaqs.length > 0 && (
-              <div
-                className="cat-faq-box"
-                style={{
-                  marginTop: "4rem",
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: "8px",
-                  border: "1px solid rgba(16, 43, 70, 0.08)",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "0.6875rem",
-                    letterSpacing: "0.22em",
-                    textTransform: "uppercase",
-                    fontWeight: 700,
-                    color: "var(--color-gold)",
-                    display: "block",
-                    marginBottom: "0.75rem",
-                  }}
-                >
-                  FREQUENTLY ASKED QUESTIONS · KURNOOL SHOWROOM
-                </span>
-                <h2
-                  style={{
-                    fontFamily: "var(--font-serif)",
-                    fontSize: "1.85rem",
-                    color: "var(--color-navy)",
-                    fontWeight: 400,
-                    marginBottom: "2rem",
-                  }}
-                >
-                  Questions about buying {categoryName} in Kurnool?
-                </h2>
-                <div style={{ display: "grid", gap: "1.5rem" }}>
-                  {seoFaqs.map((faq, idx) => (
-                    <div key={idx} style={{ borderBottom: "1px solid rgba(16, 43, 70, 0.08)", paddingBottom: "1.25rem" }}>
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-serif)",
-                          fontSize: "1.15rem",
-                          color: "var(--color-navy)",
-                          fontWeight: 500,
-                          marginBottom: "0.5rem",
-                        }}
-                      >
-                        {faq.question}
-                      </h3>
-                      <p style={{ fontSize: "0.875rem", color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
-                        {faq.answer}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+            {gridProducts.length > 0 ? (
+              <div className="cl-grid">
+                {gridProducts.map((p) => (
+                  <ProductTile
+                    key={p.id}
+                    product={p}
+                    currency={currency}
+                    isWishlisted={wishlistIds.includes(p.id)}
+                    onToggleWishlist={toggleWishlist}
+                    onAddToCart={(prod, f) => addToEnquiry(prod, f)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="cl-empty">
+                <p>No designs match these filters.</p>
+                <button type="button" onClick={() => { setPriceFilter("all"); setInStockOnly(false); }}>
+                  Clear filters
+                </button>
               </div>
             )}
-          </div>
-        </section>
-      </main>
+          </section>
+          )}
 
-      {/* Footer */}
-      <Footer />
+          {/* SEO content, comparison table & FAQs */}
+          <section className="cl-seo">
+            <div className="container cl-seo-inner">
+              <h2>{categoryName} Online in Kurnool</h2>
+              <p>{introduction}</p>
 
-      {/* Floating WhatsApp Action */}
-      <FloatingWhatsApp />
+              {categoryProducts.length > 0 && (
+                <>
+                  <h3>Which one is right for you?</h3>
+                  <div className="cl-table-wrap">
+                    <table className="cl-table">
+                      <thead>
+                        <tr>
+                          <th>Design</th>
+                          <th>Best For</th>
+                          <th>Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {categoryProducts.map((p) => (
+                          <tr key={p.id}>
+                            <td>
+                              <Link href={`/product/${p.id}`}>{p.name}</Link>
+                            </td>
+                            <td>{p.subtitle}</td>
+                            <td>{p.priceOnEnquiry ? `From ${formatPriceINR(priceOf(p))}` : formatPriceINR(priceOf(p))}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
 
-      {/* Modals & Drawers */}
-      <WishlistDrawer
-        isOpen={isWishlistOpen}
-        onClose={() => setIsWishlistOpen(false)}
-        wishlistIds={wishlistIds}
-        currency={currency}
-        onSelectProduct={setQuickViewProduct}
-        onRemoveWishlist={handleToggleWishlist}
-        onMoveToCart={() => {}}
-      />
-
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        currency={currency}
-        onSelectProduct={setQuickViewProduct}
-      />
-
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={[]}
-        currency={currency}
-        onUpdateQuantity={() => {}}
-        onRemoveItem={() => {}}
-        onClearCart={() => {}}
-      />
-
-      <QuickViewModal
-        product={quickViewProduct}
-        currency={currency}
-        onClose={() => setQuickViewProduct(null)}
-        onAddToCart={() => {}}
-        isWishlisted={quickViewProduct ? wishlistIds.includes(quickViewProduct.id) : false}
-        onToggleWishlist={handleToggleWishlist}
-      />
-
-      <Toast message={toastMessage} />
-    </div>
+              {seoFaqs && seoFaqs.length > 0 && (
+                <>
+                  <h3>Frequently Asked Questions</h3>
+                  <div className="cl-faqs">
+                    {seoFaqs.map((faq) => (
+                      <details key={faq.question}>
+                        <summary>{faq.question}</summary>
+                        <p>{faq.answer}</p>
+                      </details>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </section>
+        </>
+      )}
+    </ShopShell>
   );
 };

@@ -3,18 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { SHOP_CATEGORIES } from "@/data/categories";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-// Same six categories as the Shop menu in the header.
-const categories = [
-  { label: "Recliners", href: "/recliners-kurnool", image: "/images/catalogue-recliner-featured.jpg" },
-  { label: "Sofas", href: "/sofas-kurnool", image: "/images/mf-signature-curved-living.jpg" },
-  { label: "Dining Sets", href: "/dining-tables-kurnool", image: "/images/dining-space.jpg" },
-  { label: "Beds & Cots", href: "/beds-cots-kurnool", image: "/images/796767853_18093958568640692_8492671734547745348_n.webp" },
-  { label: "Mattresses", href: "/mattresses-kurnool", image: "/images/bedroom-space.jpg" },
-  { label: "Curtains & Blinds", href: "/curtains-blinds-kurnool", image: "/images/banner-living.jpg" },
-];
+// Same list as the Shop menu; each circle opens its own category page
+const categories = SHOP_CATEGORIES.filter((c) => c.inCircles !== false);
 
 export const PopularCategories: React.FC = () => (
   <section className="pc-section" aria-labelledby="pc-heading">

@@ -16,16 +16,18 @@ const cards = [
     cta: "Read More",
     href: "/furniture-showroom-kurnool",
     external: false,
+    map: undefined as string | undefined,
   },
   {
-    heading: "Our Collection",
+    heading: "International Collection",
     image: "/images/mf-showroom-warehouse.jpg",
-    alt: "Sofas and living room sets on display",
-    title: "Hundreds of designs, ready to see in person.",
-    text: "From compact sofas to full living, bedroom and dining sets, our team helps you choose the right size, fabric and finish for your home.",
+    alt: "International furniture on display in the showroom",
+    title: "Designed abroad, ready to see in Kurnool.",
+    text: "Scandinavian designs, Italian marble, German recliner mechanisms and Belgian linen, on display at our showroom.",
     cta: "Explore Collection",
-    href: "/furniture",
+    href: "/collections/international-collection",
     external: false,
+    map: undefined,
   },
   {
     heading: "Visit Us",
@@ -36,6 +38,7 @@ const cards = [
     cta: "Get Directions",
     href: SHOWROOM_INFO.googleMapsUrl,
     external: true,
+    map: SHOWROOM_INFO.mapEmbedUrl,
   },
 ];
 
@@ -75,7 +78,18 @@ export const StoryCards: React.FC = () => {
     <article className="story-card" style={{ width: "100%", height: "100%" }}>
       <h2 className="story-heading">{c.heading}</h2>
       <div className="story-img">
-        <Image src={c.image} alt={c.alt} fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+        {c.map ? (
+          <iframe
+            src={c.map}
+            title="Showroom location on Google Maps"
+            className="story-map"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        ) : (
+          <Image src={c.image} alt={c.alt} fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+        )}
       </div>
       <h3 className="story-title">{c.title}</h3>
       <p className="story-text">{c.text}</p>

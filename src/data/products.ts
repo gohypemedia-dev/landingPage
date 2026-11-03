@@ -10,11 +10,15 @@ export const SHOWROOM_INFO = {
   whatsappNumber: "919849012345",
   displayPhone: "+91 98490 12345",
   displayWhatsApp: "+91 98490 12345",
-  address: "Near RTC Bus Stand, Bellary Road, Kurnool, Andhra Pradesh 518004",
-  landmark: "Opp. Collectorate Office Road, Bellary Bypass",
+  address: "980-B1, Sanjeevaiah Circle, D.No. 87, near Nandyal Check Post, Valmiki Nagar, Madhavi Nagar, Kalluru, Kurnool, Andhra Pradesh 518002",
+  landmark: "Near Nandyal Check Post, Sanjeevaiah Circle",
   timing: "10:00 AM – 9:00 PM (Open All 7 Days)",
   email: "enquiry@casablancasofas.com",
-  googleMapsUrl: "https://maps.google.com/?q=Casablanca+Sofas+Kurnool",
+  instagramUrl: "https://www.instagram.com/mallikarjunafurnitureworld",
+  // Google Business listing (Mallikarjuna Furniture World, Kurnool)
+  googleMapsUrl: "https://share.google/O7MppyYwSSvoYCgfK",
+  // Keyless Google Maps embed of the same listing (used for the "Visit Us" map)
+  mapEmbedUrl: "https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sMallikarjuna+Furniture+World,+Kurnool",
   experienceArea: "15,000+ Sq. Ft. Multi-floor Luxury Showroom",
   establishedYear: 1998,
   guaranteeYears: 15,
@@ -89,7 +93,7 @@ export const getShowroomBookingWhatsAppUrl = (
   time?: string,
   interest?: string
 ): string => {
-  let msg = `Hello Casablanca Sofas Kurnool,\nI would like to plan a visit to your showroom on Bellary Road.`;
+  let msg = `Hello Casablanca Sofas Kurnool,\nI would like to plan a visit to your showroom near Nandyal Check Post.`;
   if (date) msg += `\nPreferred Date: ${date}`;
   if (time) msg += `\nPreferred Time: ${time}`;
   if (interest) msg += `\nLooking for: ${interest}`;
@@ -189,11 +193,11 @@ export const PRODUCTS: Product[] = [
       },
       {
         title: "Customisation & Fabrics",
-        content: "Choose from over 120+ stain-resistant European fabrics, pure leatherette, or genuine Italian leather. Swatches can be viewed in person at our Bellary Road showroom.",
+        content: "Choose from over 120+ stain-resistant European fabrics, pure leatherette, or genuine Italian leather. Swatches can be viewed in person at our Kurnool showroom.",
       },
       {
         title: "Warranty & Showroom Display",
-        content: "Includes 15-year structural teakwood warranty and 5-year cushion sag warranty. On live display at Casablanca Sofas, Bellary Road, Kurnool.",
+        content: "Includes 15-year structural teakwood warranty and 5-year cushion sag warranty. On live display at Casablanca Sofas, near Nandyal Check Post, Kurnool.",
       },
     ],
     rating: 4.9,
@@ -642,6 +646,92 @@ export const PRODUCTS: Product[] = [
       { id: "navy", name: "Navy Luxe", colorHex: "#102B46" },
     ],
   },
+  // Homepage "New Designs" showcase pieces
+  {
+    id: "eave-modular-sofa",
+    name: "Eave Modular Bouclé Sofa",
+    subtitle: "Architectural curves inspired by building eaves with tactile luxury bouclé",
+    category: "sofas",
+    priceUSD: 1250,
+    priceINR: 98000,
+    priceOnEnquiry: false,
+    designer: "Norm Architects for Audo Copenhagen",
+    year: 2025,
+    description: "Taking its name from 'eaves' – the lower edges of a roof that overhang a wall – the Eave Modular Sofa is an architectural piece that curves gently into open-plan spaces.",
+    details: [
+      "Modular components for flexible corner or straight configurations",
+      "Tactile bouclé upholstery with high Martindale rub endurance",
+      "Generous curved internal armrests engineered for lounging",
+    ],
+    dimensions: "W 240 cm x D 96 cm x H 70 cm (Seat Height: 40 cm)",
+    materials: "Kiln-dried solid frame, High-resilience cold foam, Bouclé wool blend",
+    primaryImage: "/images/eave-sofa.jpg",
+    finishes: [
+      { id: "ivory-boucle", name: "Ivory Bouclé", colorHex: "#F2EDE4" },
+      { id: "charcoal", name: "Charcoal Wool", colorHex: "#333538" },
+      { id: "terracotta", name: "Warm Terracotta", colorHex: "#A05A46" },
+    ],
+    rating: 5.0,
+    reviewCount: 38,
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: "echasse-smoked-vase",
+    name: "Échasse Smoked Glass Brass Vase",
+    subtitle: "Mouth-blown drop-shaped smoked glass balanced upon stilted brass legs",
+    category: "objects",
+    priceUSD: 320,
+    priceINR: 24000,
+    priceOnEnquiry: false,
+    designer: "Theresa Rand for Audo Copenhagen",
+    year: 2025,
+    description: "The Échasse Vase reimagines the classic elegance of glass vessels. The French word 'échasse' means stilts – the slender, stilt-like brass legs that suspend the smoked glass form.",
+    details: [
+      "Mouth-blown smoked glass with subtle gradient tinting",
+      "Solid bronzed brass stilt armature with brushed satin finish",
+      "Sculptural presence both empty or arranged with botanical branches",
+    ],
+    dimensions: "Diameter 28 cm x H 60 cm",
+    materials: "Mouth-blown Smoked Glass, Solid Bronzed Brass",
+    primaryImage: "/images/echasse-vase.jpg",
+    finishes: [
+      { id: "smoked-brass", name: "Smoked Glass & Brass", colorHex: "#C5A45D" },
+      { id: "amber-bronze", name: "Amber Glass & Dark Bronze", colorHex: "#4A3326" },
+    ],
+    rating: 4.9,
+    reviewCount: 29,
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: "hashira-ambient-column-lamp",
+    name: "Hashira Ambient Column Lamp",
+    subtitle: "Geometric Japanese lantern inspiration in natural linen and blackened steel",
+    category: "lighting",
+    priceUSD: 410,
+    priceINR: 32000,
+    priceOnEnquiry: false,
+    designer: "Norm Architects for Audo Copenhagen",
+    year: 2026,
+    description: "Taking inspiration from traditional Japanese paper lanterns, Hashira combines a cylindrical silhouette with a translucent linen shade that diffuses light in multiple directions.",
+    details: [
+      "Natural raw woven linen shade casting warm ambient glow",
+      "Blackened ash wood base with tactile brass dimmer dial",
+      "Architectural column geometry suited for bedside or living corners",
+    ],
+    dimensions: "Diameter 24 cm x H 83 cm",
+    materials: "Natural Linen, Blackened Ash, Solid Brass Dial",
+    primaryImage: "/images/hashira-lamp.jpg",
+    finishes: [
+      { id: "raw-linen", name: "Raw Oat Linen", colorHex: "#D8CDBA" },
+      { id: "white-linen", name: "Pure White Linen", colorHex: "#F7F5F0" },
+    ],
+    rating: 4.9,
+    reviewCount: 42,
+    inStock: true,
+    featured: true,
+  },
 ];
 
 export const CURRENT_PROMOTIONS = [
@@ -737,7 +827,7 @@ export const WHY_CHOOSE_US_POINTS = [
   {
     icon: "showroom",
     title: "Experience Before You Decide",
-    description: "Feel genuine leather, test motorized recliner mechanisms, and sit on high-density cushions in person on Bellary Road, Kurnool.",
+    description: "Feel genuine leather, test motorized recliner mechanisms, and sit on high-density cushions in person at our Kurnool showroom.",
   },
 ];
 
@@ -822,7 +912,7 @@ export const DESIGNERS = [
   {
     role: "CURATED TEXTILES & INTERIOR STYLING",
     name: "Casablanca Soft Furnishings Studio",
-    base: "Bellary Road Showroom, Kurnool",
+    base: "Kurnool Showroom",
     bio: "Specializing in acoustic blackout drapery, Belgian sheer linens, and tactile European bouclés. Offering free laser in-home measurement across Kurnool and Nandyal.",
     signature: "Bespoke Textured Velvet & Smart Motorized Drapes",
   },

@@ -60,10 +60,10 @@ export default function RootLayout({
     email: SHOWROOM_INFO.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Near RTC Bus Stand, Bellary Road, Opp. Collectorate Office Road",
+      streetAddress: "980-B1, Sanjeevaiah Circle, D.No. 87, near Nandyal Check Post, Valmiki Nagar, Madhavi Nagar, Kalluru",
       addressLocality: "Kurnool",
       addressRegion: "Andhra Pradesh",
-      postalCode: "518004",
+      postalCode: "518002",
       addressCountry: "IN",
     },
     geo: {

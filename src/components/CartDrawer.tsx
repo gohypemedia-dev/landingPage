@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { CartItem, CurrencyCode } from "@/types";
-import { CURRENCIES, SHOWROOM_INFO, formatPriceWithCurrency, formatNumberDeterministic } from "@/data/products";
+import { CURRENCIES, SHOWROOM_INFO, formatPriceINR, formatPriceWithCurrency, formatNumberDeterministic } from "@/data/products";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -24,557 +25,117 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemoveItem,
   onClearCart,
 }) => {
-  const [promoCode, setPromoCode] = useState("");
-  const [discountPercent, setDiscountPercent] = useState(0);
-  const [promoMessage, setPromoMessage] = useState("");
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
+  if (!isOpen) return null;
 
   const curr = CURRENCIES[currency];
+  const unitPrice = (item: CartItem) =>
+    currency === "INR"
+      ? item.product.priceINR || Math.round(item.product.priceUSD * 83.5)
+      : Math.round(item.product.priceUSD * curr.rate);
+  const total = items.reduce((sum, item) => sum + unitPrice(item) * item.quantity, 0);
+  const count = items.reduce((sum, item) => sum + item.quantity, 0);
+  // Indian grouping for rupees (₹1,50,000), standard grouping for other currencies
+  const money = (n: number) => (currency === "INR" ? formatPriceINR(n) : `${curr.symbol}${formatNumberDeterministic(n)}`);
 
-  const subtotal = items.reduce((sum, item) => {
-    const unitPrice =
-      currency === "INR"
-        ? item.product.priceINR || Math.round(item.product.priceUSD * 83.5)
-        : Math.round(item.product.priceUSD * curr.rate);
-    return sum + unitPrice * item.quantity;
-  }, 0);
-
-  const discountAmount = Math.round(subtotal * (discountPercent / 100));
-  const finalTotal = subtotal - discountAmount;
-
-  // Free delivery threshold (₹50,000 for Kurnool & Rayalaseema)
-  const freeShippingThreshold = currency === "INR" ? 50000 : Math.round(1500 * curr.rate);
-  const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
-  const remainingForFree = Math.max(0, freeShippingThreshold - subtotal);
-
-  const applyPromo = (e: React.FormEvent) => {
-    e.preventDefault();
-    const code = promoCode.trim().toUpperCase();
-    if (code === "KURNOOL10" || code === "CASA10" || code === "MF10") {
-      setDiscountPercent(10);
-      setPromoMessage("10% Casablanca Showroom Privilege Applied!");
-    } else if (code === "WEDDING15" || code === "CASA15" || code === "MF15") {
-      setDiscountPercent(15);
-      setPromoMessage("15% Complete Home Suite Special Privilege Applied!");
-    } else {
-      setPromoMessage("Invalid code. Try using code 'CASA10'");
-    }
-  };
-
-  const handleWhatsAppEnquiry = () => {
-    if (items.length === 0) return;
-    const itemList = items
+  const sendEnquiry = () => {
+    const list = items
       .map(
-        (it, idx) =>
-          `${idx + 1}. ${it.product.name} (${it.finish.name}) x ${it.quantity} = ${formatPriceWithCurrency(
+        (it, i) =>
+          `${i + 1}. ${it.product.name} (${it.finish.name}) x ${it.quantity} = ${formatPriceWithCurrency(
             it.product.priceUSD * it.quantity,
             currency,
             (it.product.priceINR || Math.round(it.product.priceUSD * 83.5)) * it.quantity
           )}`
       )
       .join("\n");
-
-    const totalText = formatPriceWithCurrency(
-      Math.round(finalTotal / (currency === "INR" ? 83.5 : curr.rate)),
-      currency,
-      currency === "INR" ? finalTotal : undefined
-    );
-
-    const msg = `Hello Casablanca Sofas Kurnool,\nI would like to enquire about this order list:\n\n${itemList}\n\nEstimated Total: ${totalText}${
-      discountPercent > 0 ? ` (Includes ${discountPercent}% privilege code: ${promoCode})` : ""
-    }\n\nPlease verify availability, showroom display status on Bellary Road, and delivery schedule.`;
-
-    const url = `https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
+    const msg = `Hello Casablanca Sofas Kurnool,\nI would like to enquire about these pieces:\n\n${list}\n\nTotal: ${money(total)}\n\nPlease confirm availability and delivery.`;
+    window.open(`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
   };
-
-  const handleCheckout = () => {
-    setIsCheckingOut(true);
-    setTimeout(() => {
-      setIsCheckingOut(false);
-      setOrderComplete(true);
-      setTimeout(() => {
-        onClearCart();
-        setOrderComplete(false);
-        onClose();
-      }, 3000);
-    }, 1000);
-  };
-
-  if (!isOpen) return null;
 
   return (
-    <div
-      id="cart-drawer-backdrop"
-      style={{
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(16, 43, 70, 0.65)",
-        backdropFilter: "blur(6px)",
-        zIndex: 1000,
-        display: "flex",
-        justifyContent: "flex-end",
-        animation: "fadeIn 0.25s ease",
-      }}
-      onClick={onClose}
-    >
-      <div
-        id="cart-drawer-panel"
-        style={{
-          width: "100%",
-          maxWidth: "490px",
-          height: "100%",
-          backgroundColor: "#F7F3EA",
-          boxShadow: "-8px 0 32px rgba(16, 43, 70, 0.2)",
-          display: "flex",
-          flexDirection: "column",
-          animation: "slideLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
-          overflowY: "auto",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Drawer Header */}
-        <div
-          style={{
-            padding: "1.75rem 2rem",
-            borderBottom: "1px solid rgba(16, 43, 70, 0.1)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            backgroundColor: "#FFFFFF",
-          }}
-        >
-          <div>
-            <span
-              style={{
-                fontSize: "0.6875rem",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: "var(--color-gold)",
-                fontWeight: 700,
-                display: "block",
-                marginBottom: "0.25rem",
-              }}
-            >
-              CASABLANCA SOFAS
-            </span>
-            <h3
-              style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "1.5rem",
-                color: "var(--color-navy)",
-                letterSpacing: "0.02em",
-                lineHeight: 1,
-              }}
-            >
-              Enquiry & Order List
-            </h3>
-            <span style={{ fontSize: "0.75rem", color: "var(--color-charcoal)", opacity: 0.75 }}>
-              {items.length} {items.length === 1 ? "furniture piece" : "furniture pieces"} selected
-            </span>
-          </div>
-
-          <button
-            onClick={onClose}
-            aria-label="Close bag"
-            style={{
-              background: "transparent",
-              border: "none",
-              fontSize: "1.25rem",
-              cursor: "pointer",
-              padding: "0.5rem",
-              color: "var(--color-navy)",
-            }}
-          >
-            ✕
+    <div className="cd-backdrop" onClick={onClose}>
+      <aside className="cd-panel" role="dialog" aria-modal="true" aria-label="Enquiry list" onClick={(e) => e.stopPropagation()}>
+        <header className="cd-head">
+          <h3>
+            Inquiry List <span>({count})</span>
+          </h3>
+          {items.length > 0 && (
+            <button type="button" className="cd-clear" onClick={onClearCart}>
+              Clear all
+            </button>
+          )}
+          <button type="button" className="cd-close" onClick={onClose} aria-label="Close inquiry list">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
           </button>
-        </div>
+        </header>
 
-        {/* Delivery Privilege Indicator */}
-        <div
-          style={{
-            padding: "0.9rem 2rem",
-            backgroundColor: "#FFFFFF",
-            borderBottom: "1px solid rgba(16, 43, 70, 0.08)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: "0.75rem",
-              marginBottom: "0.4rem",
-              fontWeight: 500,
-              color: "var(--color-charcoal)",
-            }}
-          >
-            <span suppressHydrationWarning>
-              {remainingForFree > 0
-                ? `Add ${curr.symbol}${formatNumberDeterministic(remainingForFree)} for Free Kurnool Delivery`
-                : "✦ You have unlocked Free Kurnool & Rayalaseema Delivery & Setup"}
-            </span>
-            <span style={{ color: "var(--color-gold)", fontWeight: 700 }}>{progressPercent}%</span>
+        {items.length === 0 ? (
+          <div className="cd-empty">
+            <p>Your inquiry list is empty.</p>
+            <Link href="/furniture" onClick={onClose} className="cd-btn cd-btn--outline">
+              Browse Furniture
+            </Link>
           </div>
-          <div
-            style={{
-              width: "100%",
-              height: "4px",
-              backgroundColor: "rgba(16, 43, 70, 0.08)",
-              borderRadius: "2px",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${progressPercent}%`,
-                height: "100%",
-                backgroundColor: "var(--color-gold)",
-                transition: "width 0.4s ease",
-              }}
-            />
-          </div>
-        </div>
+        ) : (
+          <>
+            <ul className="cd-items">
+              {items.map((item, index) => (
+                <li key={`${item.product.id}-${item.finish.id}`} className="cd-item">
+                  <Link href={`/product/${item.product.id}`} onClick={onClose} className="cd-img">
+                    <Image src={item.product.primaryImage} alt={item.product.name} fill sizes="88px" style={{ objectFit: "cover" }} />
+                  </Link>
 
-        {/* Content Body */}
-        <div style={{ flex: 1, padding: "1.5rem 2rem", overflowY: "auto" }}>
-          {items.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "4rem 1rem" }}>
-              <div
-                style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "50%",
-                  background: "rgba(16, 43, 70, 0.06)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 1.25rem",
-                  color: "var(--color-gold)",
-                }}
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                  <line x1="3" y1="6" x2="21" y2="6"></line>
-                </svg>
-              </div>
-              <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "1.35rem", color: "var(--color-navy)", marginBottom: "0.5rem" }}>
-                Your enquiry list is empty.
-              </h4>
-              <p style={{ fontSize: "0.8125rem", color: "var(--color-charcoal)", opacity: 0.8, marginBottom: "1.75rem" }}>
-                Explore our curated sofas, recliners, teakwood beds and marble dining sets.
-              </p>
-              <button onClick={onClose} className="btn-secondary" style={{ padding: "0.75rem 1.5rem" }}>
-                EXPLORE CATALOGUE
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-              {items.map((item, index) => {
-                const itemPrice =
-                  currency === "INR"
-                    ? item.product.priceINR || Math.round(item.product.priceUSD * 83.5)
-                    : Math.round(item.product.priceUSD * curr.rate);
-
-                return (
-                  <div
-                    key={`${item.product.id}-${item.finish.id}-${index}`}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "80px 1fr auto",
-                      gap: "1.1rem",
-                      padding: "1rem",
-                      background: "#FFFFFF",
-                      borderRadius: "6px",
-                      border: "1px solid rgba(16, 43, 70, 0.08)",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "80px",
-                        height: "90px",
-                        backgroundColor: "#EFECE6",
-                        borderRadius: "4px",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <Image
-                        src={item.product.primaryImage}
-                        alt={item.product.name}
-                        fill
-                        style={{ objectFit: "cover" }}
-                      />
-                    </div>
-
-                    <div>
-                      <h4
-                        style={{
-                          fontFamily: "var(--font-serif)",
-                          fontSize: "1.0625rem",
-                          color: "var(--color-navy)",
-                          lineHeight: 1.25,
-                          marginBottom: "0.25rem",
-                        }}
-                      >
-                        {item.product.name}
-                      </h4>
-                      <div
-                        style={{
-                          fontSize: "0.75rem",
-                          color: "var(--color-charcoal)",
-                          opacity: 0.8,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.4rem",
-                          marginBottom: "0.5rem",
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: "8px",
-                            height: "8px",
-                            borderRadius: "50%",
-                            backgroundColor: item.finish.colorHex,
-                            display: "inline-block",
-                          }}
-                        />
-                        <span>{item.finish.name}</span>
-                      </div>
-
-                      {/* Quantity Controls */}
-                      <div
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          border: "1px solid rgba(16, 43, 70, 0.2)",
-                          borderRadius: "4px",
-                          background: "#FFFFFF",
-                        }}
-                      >
-                        <button
-                          onClick={() => onUpdateQuantity(index, item.quantity - 1)}
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            width: "24px",
-                            height: "24px",
-                            cursor: "pointer",
-                            fontSize: "0.875rem",
-                            color: "var(--color-navy)",
-                          }}
-                        >
-                          -
+                  <div className="cd-info">
+                    <Link href={`/product/${item.product.id}`} onClick={onClose} className="cd-name">
+                      {item.product.name}
+                    </Link>
+                    <span className="cd-finish">
+                      <i style={{ backgroundColor: item.finish.colorHex }} />
+                      {item.finish.name}
+                    </span>
+                    <div className="cd-row">
+                      <div className="cd-qty" aria-label="Quantity">
+                        <button type="button" onClick={() => onUpdateQuantity(index, item.quantity - 1)} aria-label="Decrease quantity">
+                          −
                         </button>
-                        <span style={{ fontSize: "0.75rem", padding: "0 0.5rem", fontWeight: 700, color: "var(--color-navy)" }}>
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => onUpdateQuantity(index, item.quantity + 1)}
-                          style={{
-                            background: "transparent",
-                            border: "none",
-                            width: "24px",
-                            height: "24px",
-                            cursor: "pointer",
-                            fontSize: "0.875rem",
-                            color: "var(--color-navy)",
-                          }}
-                        >
+                        <span>{item.quantity}</span>
+                        <button type="button" onClick={() => onUpdateQuantity(index, item.quantity + 1)} aria-label="Increase quantity">
                           +
                         </button>
                       </div>
-                    </div>
-
-                    <div style={{ textAlign: "right" }}>
-                      <div suppressHydrationWarning style={{ fontWeight: 700, fontSize: "0.9375rem", color: "var(--color-navy)", marginBottom: "0.5rem" }}>
-                        {curr.symbol}
-                        {formatNumberDeterministic(itemPrice * item.quantity)}
-                      </div>
-                      <button
-                        onClick={() => onRemoveItem(index)}
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          fontSize: "0.6875rem",
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                          color: "#888",
-                          cursor: "pointer",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        Remove
-                      </button>
+                      <strong suppressHydrationWarning>{money(unitPrice(item) * item.quantity)}</strong>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
 
-        {/* Drawer Footer */}
-        {items.length > 0 && (
-          <div
-            style={{
-              padding: "1.5rem 2rem",
-              borderTop: "1px solid rgba(16, 43, 70, 0.1)",
-              backgroundColor: "#FFFFFF",
-            }}
-          >
-            {/* Promo Code Input */}
-            <form onSubmit={applyPromo} style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
-              <input
-                type="text"
-                placeholder="PROMO CODE (e.g. KURNOOL10)"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: "0.55rem 0.8rem",
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.06em",
-                  border: "1px solid rgba(16, 43, 70, 0.2)",
-                  borderRadius: "4px",
-                  fontFamily: "var(--font-sans)",
-                  outline: "none",
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  padding: "0.55rem 1rem",
-                  background: "var(--color-navy)",
-                  color: "#FFFFFF",
-                  border: "none",
-                  borderRadius: "4px",
-                  fontSize: "0.6875rem",
-                  letterSpacing: "0.12em",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                }}
-              >
-                APPLY
+                  <button type="button" className="cd-remove" onClick={() => onRemoveItem(index)} aria-label={`Remove ${item.product.name}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <footer className="cd-foot">
+              <div className="cd-total">
+                <span>Total</span>
+                <strong suppressHydrationWarning>{money(total)}</strong>
+              </div>
+              <button type="button" className="cd-btn cd-btn--whatsapp" onClick={sendEnquiry}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                </svg>
+                Send Inquiry
               </button>
-            </form>
-
-            {promoMessage && (
-              <div
-                style={{
-                  fontSize: "0.6875rem",
-                  color: discountPercent > 0 ? "var(--color-gold)" : "#C0392B",
-                  marginBottom: "0.75rem",
-                  fontWeight: 600,
-                }}
-              >
-                {promoMessage}
-              </div>
-            )}
-
-            {/* Calculations */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", marginBottom: "1.25rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", color: "var(--color-charcoal)" }}>
-                <span>Subtotal</span>
-                <span suppressHydrationWarning>{curr.symbol}{formatNumberDeterministic(subtotal)}</span>
-              </div>
-
-              {discountPercent > 0 && (
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", color: "var(--color-gold)" }}>
-                  <span>Showroom Privilege ({discountPercent}%)</span>
-                  <span suppressHydrationWarning>-{curr.symbol}{formatNumberDeterministic(discountAmount)}</span>
-                </div>
-              )}
-
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", color: "var(--color-charcoal)" }}>
-                <span>Delivery & Professional Installation</span>
-                <span>{remainingForFree === 0 ? "FREE (Kurnool & Area)" : "Complimentary on ₹50k+"}</span>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: "1.125rem",
-                  fontWeight: 700,
-                  color: "var(--color-navy)",
-                  paddingTop: "0.75rem",
-                  borderTop: "1px solid rgba(16, 43, 70, 0.1)",
-                }}
-              >
-                <span>Estimated Price Guidance</span>
-                <span suppressHydrationWarning>{curr.symbol}{formatNumberDeterministic(finalTotal)}</span>
-              </div>
-            </div>
-
-            {/* Conversion Actions */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
-              <button
-                onClick={handleWhatsAppEnquiry}
-                className="btn-whatsapp"
-                style={{
-                  width: "100%",
-                  padding: "0.95rem",
-                  borderRadius: "6px",
-                  fontSize: "0.8125rem",
-                  letterSpacing: "0.08em",
-                  justifyContent: "center",
-                }}
-              >
-                SEND ENQUIRY ON WHATSAPP
+              <button type="button" className="cd-btn cd-btn--outline" onClick={onClose}>
+                Continue Shopping
               </button>
-
-              {orderComplete ? (
-                <div
-                  style={{
-                    padding: "0.85rem",
-                    background: "#F7F3EA",
-                    border: "1px solid var(--color-gold)",
-                    borderRadius: "6px",
-                    textAlign: "center",
-                    fontSize: "0.8125rem",
-                    color: "var(--color-navy)",
-                    fontWeight: 600,
-                  }}
-                >
-                  ✓ Enquiry Registered! Our Kurnool sales team will reach out.
-                </div>
-              ) : (
-                <button
-                  onClick={handleCheckout}
-                  disabled={isCheckingOut}
-                  className="btn-primary"
-                  style={{ width: "100%", padding: "0.85rem", borderRadius: "6px", fontSize: "0.75rem" }}
-                >
-                  {isCheckingOut ? (
-                    <span>CONFIRMING SHOWROOM ENQUIRY...</span>
-                  ) : (
-                    <span>REQUEST SHOWROOM VISIT & QUOTE</span>
-                  )}
-                </button>
-              )}
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "1rem",
-                marginTop: "1rem",
-                fontSize: "0.6875rem",
-                color: "var(--color-charcoal)",
-                opacity: 0.75,
-              }}
-            >
-              <span>✦ 15-Yr Teakwood Warranty</span>
-              <span>✦ Zero-Sag Foam</span>
-              <span>✦ Kurnool Showroom Visit</span>
-            </div>
-          </div>
+            </footer>
+          </>
         )}
-      </div>
+      </aside>
     </div>
   );
 };

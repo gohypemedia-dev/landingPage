@@ -1,39 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { SHOWROOM_INFO, getShowroomBookingWhatsAppUrl } from "@/data/products";
-import { WishlistDrawer } from "@/components/WishlistDrawer";
-import { SearchModal } from "@/components/SearchModal";
-import { CartDrawer } from "@/components/CartDrawer";
-import { Toast } from "@/components/Toast";
-import { CurrencyCode } from "@/types";
+import { ShopShell } from "@/components/shop/ShopShell";
 
-export const ShowroomPageClient: React.FC = () => {
-  const [currency, setCurrency] = useState<CurrencyCode>("INR");
-  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "var(--color-canvas)" }}>
-      {/* Header */}
-      <Header
-        currency={currency}
-        onCurrencyChange={setCurrency}
-        cartCount={0}
-        wishlistCount={wishlistIds.length}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenWishlist={() => setIsWishlistOpen(true)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-      />
-
-      <main style={{ flex: 1 }}>
+// Uses the shared site shell, so the header shortlist / inquiry list work here too
+export const ShowroomPageClient: React.FC = () => (
+  <ShopShell>
+    {() => (
+      <>
         {/* Hero Section */}
         <section
           style={{
@@ -112,7 +88,7 @@ export const ShowroomPageClient: React.FC = () => {
                 className="btn-whatsapp"
                 style={{ padding: "0.95rem 2rem", borderRadius: "999px", fontSize: "0.8125rem" }}
               >
-                <span>BOOK EXECUTIVE ASSISTANCE ON WHATSAPP</span>
+                <span>Book a Showroom Visit</span>
               </a>
               <a
                 href={SHOWROOM_INFO.googleMapsUrl}
@@ -171,7 +147,7 @@ export const ShowroomPageClient: React.FC = () => {
                   From Raw Teakwood to Your Living Room
                 </h2>
                 <p style={{ color: "var(--color-text-secondary)", fontSize: "1rem", lineHeight: 1.7, fontWeight: 300, marginBottom: "1.5rem" }}>
-                  Our Bellary Road premises span a complete multi-zone luxury experience: curated living galleries, an ergonomic recliner trial lounge, a 500+ fabric upholstery studio, and our state-of-the-art dispatch warehouse ensuring rapid delivery across Kurnool, Nandyal, and Dhone.
+                  Our Kurnool premises span a complete multi-zone luxury experience: curated living galleries, an ergonomic recliner trial lounge, a 500+ fabric upholstery studio, and our state-of-the-art dispatch warehouse ensuring rapid delivery across Kurnool, Nandyal, and Dhone.
                 </p>
                 <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
                   <div>
@@ -232,7 +208,7 @@ export const ShowroomPageClient: React.FC = () => {
                 {
                   icon: "🚗",
                   title: "Valet & Dedicated Parking",
-                  desc: "Spacious private parking right at our Bellary Road entrance for stress-free family visits.",
+                  desc: "Spacious private parking right at our showroom entrance for stress-free family visits.",
                 },
                 {
                   icon: "🛋️",
@@ -279,43 +255,7 @@ export const ShowroomPageClient: React.FC = () => {
             </div>
           </div>
         </section>
-      </main>
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Floating WhatsApp */}
-      <FloatingWhatsApp />
-
-      {/* Modals & Drawers */}
-      <WishlistDrawer
-        isOpen={isWishlistOpen}
-        onClose={() => setIsWishlistOpen(false)}
-        wishlistIds={wishlistIds}
-        currency={currency}
-        onSelectProduct={() => {}}
-        onRemoveWishlist={() => {}}
-        onMoveToCart={() => {}}
-      />
-
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        currency={currency}
-        onSelectProduct={() => {}}
-      />
-
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={[]}
-        currency={currency}
-        onUpdateQuantity={() => {}}
-        onRemoveItem={() => {}}
-        onClearCart={() => {}}
-      />
-
-      <Toast message={toastMessage} />
-    </div>
-  );
-};
+      </>
+    )}
+  </ShopShell>
+);

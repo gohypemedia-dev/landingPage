@@ -124,7 +124,7 @@ export const Hero: React.FC = () => {
 
         <motion.div className="hero-cta-wrap" style={{ opacity: isMounted ? textOpacity : 1 }}>
           <motion.a
-            href="#collection"
+            href="/collections/new-designs"
             id="hero-shop-now-btn"
             className="hero-cta-btn"
             initial={{ opacity: 0, y: 18 }}
