@@ -48,7 +48,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           )}`
       )
       .join("\n");
-    const msg = `Hello Casablanca Sofas Kurnool,\nI would like to enquire about these pieces:\n\n${list}\n\nTotal: ${money(total)}\n\nPlease confirm availability and delivery.`;
+    const msg = `Hello Mallikarjuna Furniture World Kurnool,\nI would like to enquire about these pieces:\n\n${list}\n\nTotal: ${money(total)}\n\nPlease confirm availability and delivery.`;
     window.open(`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
   };
 

@@ -271,7 +271,7 @@ export const ShowroomExperience: React.FC = () => {
           zIndex: 0,
         }}
       >
-        CASABLANCA KURNOOL · 15,000 SQ. FT.
+        MALLIKARJUNA KURNOOL · 15,000 SQ. FT.
       </motion.div>
 
       {/* 2. Ambient Parallax Glow Orbs */}
@@ -446,7 +446,7 @@ export const ShowroomExperience: React.FC = () => {
                 >
                   <Image
                     src="/images/showroom-kurnool-main.jpg"
-                    alt="Casablanca Sofas 15,000 Sq. Ft. Luxury Furniture Showroom Kurnool"
+                    alt="Mallikarjuna Furniture World 15,000 Sq. Ft. Luxury Furniture Showroom Kurnool"
                     fill
                     sizes="(max-width: 992px) 100vw, 65vw"
                     style={{ objectFit: "cover" }}
@@ -883,7 +883,7 @@ export const ShowroomExperience: React.FC = () => {
                     marginBottom: "0.45rem",
                   }}
                 >
-                  Casablanca Sofas Showroom
+                  Mallikarjuna Furniture World Showroom
                 </h4>
                 <p
                   style={{
@@ -1113,7 +1113,7 @@ export const ShowroomExperience: React.FC = () => {
           ))}
         </motion.div>
       </div>
-
+
     </section>
   );
 };

@@ -1,14 +1,20 @@
-"use client";
-
 import React from "react";
+import Image from "next/image";
+import { SHOWROOM_INFO } from "@/data/products";
 
 interface BrandLogoProps {
   className?: string;
   isScrolled?: boolean;
   size?: "sm" | "md" | "lg" | "xl";
   height?: number;
+  /** Set when the logo sits on a light surface. Otherwise it gets a thin white outline so the red wordmark stays legible on dark/glass backgrounds. */
   inverted?: boolean;
+  preload?: boolean;
 }
+
+// Intrinsic size of /images/mfw-logo.png (transparent background)
+const LOGO_WIDTH = 1350;
+const LOGO_HEIGHT = 278;
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = "",
@@ -16,69 +22,31 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   size = "lg",
   height: customHeight,
   inverted = false,
+  preload = false,
 }) => {
   const heights: Record<string, number> = {
-    sm: 52,
-    md: 68,
-    lg: isScrolled ? 76 : 90,
-    xl: 104,
+    sm: 28,
+    md: 34,
+    lg: isScrolled ? 34 : 38,
+    xl: 80,
   };
 
-  const defaultHeight = heights[size] || 90;
-  const height = customHeight ?? defaultHeight;
-  const width = Math.round(height * (1400 / 696)); // ~2.01:1 aspect ratio
-
-  const inkColor = inverted ? "#1c1b19" : "#FFFFFF";
+  const height = customHeight ?? heights[size] ?? 38;
 
   return (
-    <div
-      className={`brand-logo-container brand-logo-${size} ${isScrolled ? "is-scrolled" : ""} ${className}`}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        width: `var(--brand-logo-width, ${width}px)`,
-        height: `var(--brand-logo-height, ${height}px)`,
-        userSelect: "none",
-        transition: "opacity 0.25s ease, transform 0.25s ease, width 0.25s ease, height 0.25s ease",
-      }}
-      aria-label="Casablanca Sofas"
-      role="img"
+    <span
+      className={`brand-logo-container brand-logo-${size} ${inverted ? "" : "brand-logo--on-dark"} ${isScrolled ? "is-scrolled" : ""} ${className}`}
+      style={{ "--brand-logo-default-height": `${height}px` } as React.CSSProperties}
     >
-      {/* 1. Ring & Medallion in authentic warm champagne gold (#c8b89a) */}
-      <span
-        className="brand-logo__ring"
-        style={{
-          position: "absolute",
-          inset: 0,
-          WebkitMaskSize: "contain",
-          WebkitMaskPosition: "center",
-          WebkitMaskRepeat: "no-repeat",
-          maskSize: "contain",
-          maskPosition: "center",
-          maskRepeat: "no-repeat",
-          display: "block",
-        }}
+      <Image
+        src="/images/mfw-logo.png"
+        alt={SHOWROOM_INFO.brandName}
+        width={LOGO_WIDTH}
+        height={LOGO_HEIGHT}
+        sizes="400px"
+        preload={preload}
+        draggable={false}
       />
-
-      {/* 2. Wordmark ink text in white/cream on dark nav, dark on light nav */}
-      <span
-        className="brand-logo__ink"
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundColor: inkColor,
-          WebkitMaskSize: "contain",
-          WebkitMaskPosition: "center",
-          WebkitMaskRepeat: "no-repeat",
-          maskSize: "contain",
-          maskPosition: "center",
-          maskRepeat: "no-repeat",
-          display: "block",
-        }}
-      />
-    </div>
+    </span>
   );
 };
-

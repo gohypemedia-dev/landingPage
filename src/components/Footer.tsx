@@ -33,7 +33,7 @@ const helpLinks = [
 ];
 
 const whatsappUrl = `https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(
-  "Hello Casablanca Sofas Kurnool, I would like to know more about your furniture."
+  "Hello Mallikarjuna Furniture World Kurnool, I would like to know more about your furniture."
 )}`;
 
 // Newsletter sign-up. There is no email service connected yet, so a sign-up is sent to the store on WhatsApp.
@@ -96,7 +96,7 @@ Email: ${email}`;
 export const Footer: React.FC = () => (
   <footer className="fx" aria-label="Site footer">
     <div className="fx-brand">
-      <Link href="/" aria-label="Casablanca Sofas - Home">
+      <Link href="/" aria-label="Mallikarjuna Furniture World - Home">
         <BrandLogo size="xl" inverted />
       </Link>
     </div>

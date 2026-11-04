@@ -3,8 +3,8 @@ import Link from "next/link";
 import { InfoPage } from "@/components/shop/InfoPage";
 
 export const metadata: Metadata = {
-  title: "Delivery & Installation | Casablanca Sofas Kurnool",
-  description: "Delivery areas, timelines and installation for furniture from Casablanca Sofas, Kurnool.",
+  title: "Delivery & Installation | Mallikarjuna Furniture World Kurnool",
+  description: "Delivery areas, timelines and installation for furniture from Mallikarjuna Furniture World, Kurnool.",
 };
 
 // DRAFT: confirm areas, charges and timelines with the store before publishing.

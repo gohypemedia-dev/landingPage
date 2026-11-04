@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const collection = COLLECTIONS.find((c) => c.slug === slug);
   if (!collection) return {};
   return {
-    title: `${collection.title} | Casablanca Sofas Kurnool`,
+    title: `${collection.title} | Mallikarjuna Furniture World Kurnool`,
     description: collection.intro,
   };
 }

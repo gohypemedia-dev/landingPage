@@ -28,7 +28,7 @@ export const WhyChooseUs: React.FC = () => {
               marginBottom: "0.75rem",
             }}
           >
-            THE CASABLANCA COMMITMENT
+            THE MALLIKARJUNA COMMITMENT
           </span>
           <h2
             style={{

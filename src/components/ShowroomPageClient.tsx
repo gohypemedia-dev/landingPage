@@ -26,7 +26,7 @@ export const ShowroomPageClient: React.FC = () => (
           <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
             <Image
               src="/images/mf-showroom-grand-hall.jpg"
-              alt="Casablanca Sofas Kurnool Grand Showroom"
+              alt="Mallikarjuna Furniture World Kurnool Grand Showroom"
               fill
               priority
               style={{ objectFit: "cover" }}
@@ -117,7 +117,7 @@ export const ShowroomPageClient: React.FC = () => (
                 <div style={{ position: "relative", height: "230px", borderRadius: "10px", overflow: "hidden", boxShadow: "0 15px 35px rgba(16,43,70,0.12)" }}>
                   <Image
                     src="/images/mf-showroom-warehouse.jpg"
-                    alt="Casablanca Sofas Multi-Floor Experience Tour and Warehouse Facility"
+                    alt="Mallikarjuna Furniture World Multi-Floor Experience Tour and Warehouse Facility"
                     fill
                     sizes="(max-width: 992px) 100vw, 50vw"
                     style={{ objectFit: "cover" }}
@@ -129,7 +129,7 @@ export const ShowroomPageClient: React.FC = () => (
                 <div style={{ position: "relative", height: "230px", borderRadius: "10px", overflow: "hidden", boxShadow: "0 15px 35px rgba(16,43,70,0.12)" }}>
                   <Image
                     src="/images/mf-showroom-gallery-wood.jpg"
-                    alt="Casablanca Sofas Live Kurnool Showroom Woodcraft Gallery"
+                    alt="Mallikarjuna Furniture World Live Kurnool Showroom Woodcraft Gallery"
                     fill
                     sizes="(max-width: 992px) 100vw, 50vw"
                     style={{ objectFit: "cover" }}

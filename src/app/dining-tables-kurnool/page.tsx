@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 
 export const metadata: Metadata = {
-  title: "Dining Tables in Kurnool | Italian Marble & Teakwood Dining Sets — Casablanca Sofas",
+  title: "Dining Tables in Kurnool | Italian Marble & Teakwood Dining Sets — Mallikarjuna Furniture World",
   description:
-    "Explore 6-seater and 8-seater Italian marble dining tables in Kurnool at Casablanca Sofas. Anti-stain sealed marble, solid teakwood bases, and ergonomic dining chairs.",
+    "Explore 6-seater and 8-seater Italian marble dining tables in Kurnool at Mallikarjuna Furniture World. Anti-stain sealed marble, solid teakwood bases, and ergonomic dining chairs.",
 };
 
 export default function DiningTablesKurnoolPage() {

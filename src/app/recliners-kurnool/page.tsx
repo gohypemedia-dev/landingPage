@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 
 export const metadata: Metadata = {
-  title: "Motorized Recliners in Kurnool | Zero Gravity & Leather Loungers — Casablanca Sofas",
+  title: "Motorized Recliners in Kurnool | Zero Gravity & Leather Loungers — Mallikarjuna Furniture World",
   description:
-    "Explore motorized recliners and zero-gravity loungers in Kurnool at Casablanca Sofas. German OKIN motors, USB charging ports, and breathable leatherette with 5-year mechanism warranty.",
+    "Explore motorized recliners and zero-gravity loungers in Kurnool at Mallikarjuna Furniture World. German OKIN motors, USB charging ports, and breathable leatherette with 5-year mechanism warranty.",
 };
 
 export default function ReclinersKurnoolPage() {

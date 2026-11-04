@@ -50,7 +50,7 @@ export const CustomerReviews: React.FC = () => {
               fontWeight: 300,
             }}
           >
-            Hear from Kurnool doctors, villa owners, and homeowners who chose Casablanca Sofas for their living spaces.
+            Hear from Kurnool doctors, villa owners, and homeowners who chose Mallikarjuna Furniture World for their living spaces.
           </p>
         </div>
 

@@ -277,7 +277,7 @@ export const CraftsmanshipSection: React.FC = () => {
           zIndex: 0,
         }}
       >
-        SEASONED TEAK · HANDMADE JOINERY · CASABLANCA
+        SEASONED TEAK · HANDMADE JOINERY · MALLIKARJUNA
       </motion.div>
 
       {/* 2. Ambient Parallax Glow Orbs */}
@@ -382,7 +382,7 @@ export const CraftsmanshipSection: React.FC = () => {
               color: "var(--color-sand)",
             }}
           >
-            <span>CASABLANCA SOFAS</span>
+            <span>MALLIKARJUNA FURNITURE WORLD</span>
             <span style={{ color: "var(--color-gold)" }}>·</span>
             <span>KURNOOL, ANDHRA PRADESH</span>
           </div>
@@ -595,7 +595,7 @@ export const CraftsmanshipSection: React.FC = () => {
                 >
                   <Image
                     src="/images/craft-workshop.jpg"
-                    alt="Casablanca Sofas Teakwood Workshop and Joinery"
+                    alt="Mallikarjuna Furniture World Teakwood Workshop and Joinery"
                     fill
                     sizes="(max-width: 992px) 100vw, 55vw"
                     style={{ objectFit: "cover" }}
@@ -1005,7 +1005,7 @@ export const CraftsmanshipSection: React.FC = () => {
           ))}
         </motion.div>
       </div>
-
+
     </section>
   );
 };

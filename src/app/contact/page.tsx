@@ -3,12 +3,12 @@ import { SHOWROOM_INFO } from "@/data/products";
 import { InfoPage } from "@/components/shop/InfoPage";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Casablanca Sofas Kurnool",
-  description: "Visit, call or WhatsApp Casablanca Sofas in Kurnool for furniture enquiries, prices and showroom visits.",
+  title: "Contact Us | Mallikarjuna Furniture World Kurnool",
+  description: "Visit, call or WhatsApp Mallikarjuna Furniture World in Kurnool for furniture enquiries, prices and showroom visits.",
 };
 
 const whatsappUrl = `https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(
-  "Hello Casablanca Sofas Kurnool, I have an enquiry."
+  "Hello Mallikarjuna Furniture World Kurnool, I have an enquiry."
 )}`;
 
 export default function ContactPage() {

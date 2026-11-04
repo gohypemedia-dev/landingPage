@@ -3,8 +3,8 @@ import Link from "next/link";
 import { InfoPage } from "@/components/shop/InfoPage";
 
 export const metadata: Metadata = {
-  title: "Returns & Cancellation | Casablanca Sofas Kurnool",
-  description: "Cancellation, return and replacement policy for furniture bought from Casablanca Sofas, Kurnool.",
+  title: "Returns & Cancellation | Mallikarjuna Furniture World Kurnool",
+  description: "Cancellation, return and replacement policy for furniture bought from Mallikarjuna Furniture World, Kurnool.",
 };
 
 // DRAFT: confirm time limits and refund terms with the store before publishing.

@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const cat = DYNAMIC_CATEGORIES.find((c) => c.slug === slug);
   if (!cat) return {};
   return {
-    title: `${cat.label} in Kurnool | Casablanca Sofas`,
-    description: `Browse ${cat.label.toLowerCase()} at Casablanca Sofas, Kurnool. Enquire on WhatsApp for designs, prices and showroom availability.`,
+    title: `${cat.label} in Kurnool | Mallikarjuna Furniture World`,
+    description: `Browse ${cat.label.toLowerCase()} at Mallikarjuna Furniture World, Kurnool. Enquire on WhatsApp for designs, prices and showroom availability.`,
   };
 }
 
@@ -37,7 +37,7 @@ async function CategoryContent({ params }: { params: Promise<{ slug: string }> }
       categoryName={cat.label}
       heading={cat.label}
       subheading={cat.label}
-      introduction={`Explore ${cat.label.toLowerCase()} at Casablanca Sofas, Kurnool. Visit our Kurnool showroom or enquire on WhatsApp for the full range, sizes and finishes.`}
+      introduction={`Explore ${cat.label.toLowerCase()} at Mallikarjuna Furniture World, Kurnool. Visit our Kurnool showroom or enquire on WhatsApp for the full range, sizes and finishes.`}
       categoryTiles={[]}
       products={getCategoryProducts(cat.slug)}
       heroImage={cat.image}

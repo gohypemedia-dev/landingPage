@@ -8,7 +8,7 @@
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Casablanca Sofas Brand Colour Palette */
+  /* Mallikarjuna Furniture World Brand Colour Palette */
   --color-navy: #102B46;
   --color-gold: #C5A45D;
   --color-gold-hover: #b08f48;
@@ -358,49 +358,26 @@ h1, h2, h3, h4, .font-serif {
   box-shadow: 0 16px 36px rgba(24, 134, 75, 0.5);
 }
 
-/* Casablanca Brand Logo (Exact replication from reference site) */
-.brand-logo {
-  aspect-ratio: 5674 / 2820;
-  height: 48px;
-  display: block;
-  position: relative;
+/* Mallikarjuna Furniture World wordmark (BrandLogo) */
+.brand-logo-container {
+  display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  user-select: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.brand-logo:hover {
-  opacity: 0.92;
-  transform: scale(1.02);
+.brand-logo-container img {
+  display: block;
+  height: var(--brand-logo-height, var(--brand-logo-default-height, 38px));
+  width: auto;
+  max-width: 100%;
+  transition: height 0.25s ease;
 }
 
-.brand-logo__ring,
-.brand-logo__ink {
-  position: absolute;
-  inset: 0;
-  -webkit-mask-position: 50%;
-  mask-position: 50%;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-}
-
-:root {
-  --mask-logo-ring: url(/images/logo-mask-ring.png);
-  --mask-logo-ink: url(/images/logo-mask-ink.png);
-}
-
-.brand-logo__ring {
-  background-color: #c8b89a;
-  -webkit-mask-image: var(--mask-logo-ring);
-  mask-image: var(--mask-logo-ring);
-}
-
-.brand-logo__ink {
-  background-color: #ffffff;
-  transition: background-color 0.3s ease;
-  -webkit-mask-image: var(--mask-logo-ink);
-  mask-image: var(--mask-logo-ink);
+/* Thin white outline keeps the red wordmark legible on the dark glass header */
+.brand-logo--on-dark img {
+  filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
 }
 
 /* =========================================================
@@ -464,15 +441,11 @@ h1, h2, h3, h4, .font-serif {
 }
 
 .header-brand-wrap .brand-logo-container {
-  --brand-logo-height: 56px;
-  --brand-logo-width: 113px;
-  height: var(--brand-logo-height);
-  width: var(--brand-logo-width);
+  --brand-logo-height: 38px;
 }
 
 .main-header.is-scrolled .header-brand-wrap .brand-logo-container {
-  --brand-logo-height: 52px;
-  --brand-logo-width: 105px;
+  --brand-logo-height: 34px;
 }
 
 .nav-link {
@@ -663,8 +636,7 @@ h1, h2, h3, h4, .font-serif {
     padding: 0;
   }
   .header-brand-wrap .brand-logo-container {
-    --brand-logo-height: 46px !important;
-    --brand-logo-width: 93px !important;
+    --brand-logo-height: 26px !important;
   }
   .mobile-action-icon {
     display: inline-flex;
@@ -685,8 +657,7 @@ h1, h2, h3, h4, .font-serif {
     padding: 0.25rem;
   }
   .header-brand-wrap .brand-logo-container {
-    --brand-logo-height: 40px !important;
-    --brand-logo-width: 81px !important;
+    --brand-logo-height: 24px !important;
   }
 }
 
@@ -2302,6 +2273,7 @@ h1, h2, h3, h4, .font-serif {
   border-radius: 4px;
   background: var(--color-canvas-alt);
 }
+.story-map { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
 .story-img img { transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .story-card:hover .story-img img { transform: scale(1.04); }
 .story-title {
@@ -3864,8 +3836,7 @@ html, body {
   }
 
   .inquiry-promo-logo {
-    --brand-logo-height: 28px !important;
-    --brand-logo-width: 56px !important;
+    --brand-logo-height: 22px !important;
   }
 
 
@@ -6037,7 +6008,7 @@ html, body {
 /* Laptops (1101–1300px, e.g. 1920px screens at 150% scaling): compact header so the full menu still fits */
 @media (min-width: 1101px) and (max-width: 1300px) {
   .header-inner { padding: 0 1rem; column-gap: 1rem; }
-  .header-brand-wrap .brand-logo-container { --brand-logo-height: 54px; --brand-logo-width: 108px; }
+  .header-brand-wrap .brand-logo-container { --brand-logo-height: 34px; }
   .nav-cats { gap: 0.95rem; }
   .nav-cats .nav-link { font-size: 0.64rem; letter-spacing: 0.07em; }
   .header-actions { gap: 0.4rem; }
@@ -6362,7 +6333,7 @@ html, body {
 /* Footer on phones: same compact text scale as the rest of the mobile site */
 @media (max-width: 640px) {
   .fx { padding: 2.5rem 1.25rem 0; }
-  .fx-brand .brand-logo-container { --brand-logo-height: 70px !important; --brand-logo-width: 141px !important; }
+  .fx-brand .brand-logo-container { --brand-logo-height: 52px !important; }
   .fx-cols { gap: 1.75rem 1rem; padding-bottom: 2rem; }
   .fx-col h4, .fx-col .fx-news-copy h4 { margin: 0 0 0.7rem; font-size: 0.92rem; }
   .fx-col .fx-sub, .fx-col .fx-news-copy h4 { margin-top: 1.25rem; }

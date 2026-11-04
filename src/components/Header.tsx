@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       {/* 
         COMPACT LUXURY NAVBAR - Section 2 of Brief:
-        Left: Circular CB medallion + CASABLANCA SOFAS
+        Left: Mallikarjuna Furniture World wordmark
         Center: HOME · SHOP · COLLECTIONS · OUR SHOWROOM · OFFERS · CONTACT
         Right: Search Icon · Shortlist Bookmark Icon · Visible WhatsApp Enquiry Button
       */}
@@ -127,10 +127,10 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="header-brand-wrap">
             <Link
               href="/"
-              aria-label="Casablanca Sofas - Home"
+              aria-label="Mallikarjuna Furniture World - Home"
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center" }}
             >
-              <BrandLogo size="lg" isScrolled={isScrolled} />
+              <BrandLogo size="lg" isScrolled={isScrolled} preload />
             </Link>
           </div>
 
@@ -458,7 +458,7 @@ export const Header: React.FC<HeaderProps> = ({
                   marginBottom: "0.25rem",
                 }}
               >
-                CASABLANCA SOFAS
+                MALLIKARJUNA FURNITURE WORLD
               </span>
 
               <h3

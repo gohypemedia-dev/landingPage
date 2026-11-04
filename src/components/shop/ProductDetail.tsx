@@ -94,7 +94,7 @@ const ProductDetailBody: React.FC<{
 
   // Clean product URL (no hash / query) for sharing
   const shareUrl = () => `${window.location.origin}/product/${product.id}`;
-  const shareText = `${product.name} at Casablanca Sofas, Kurnool`;
+  const shareText = `${product.name} at Mallikarjuna Furniture World, Kurnool`;
 
   const share = (net: "whatsapp" | "facebook" | "x" | "email") => {
     const url = encodeURIComponent(shareUrl());

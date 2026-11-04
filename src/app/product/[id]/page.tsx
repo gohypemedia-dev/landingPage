@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const product = PRODUCTS.find((p) => p.id === id);
   if (!product) return {};
   return {
-    title: `${product.name} | Casablanca Sofas Kurnool`,
+    title: `${product.name} | Mallikarjuna Furniture World Kurnool`,
     description: product.subtitle,
     openGraph: { images: [product.primaryImage] },
   };

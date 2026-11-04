@@ -720,7 +720,7 @@ export const ThreeProductViewer: React.FC<ThreeProductViewerProps> = ({
 
               <a
                 href={`https://wa.me/919849012345?text=${encodeURIComponent(
-                  `Hello Casablanca Sofas Kurnool,\nI customized this bespoke piece in your 3D Studio:\nProduct: Plinth Architectural Table\nFinish: ${activeFinish.name}\nEstimated Budget: ${formatPriceINR(Math.round(activeFinish.priceUSD * 83.5))}\nPlease confirm availability and showroom delivery.`
+                  `Hello Mallikarjuna Furniture World Kurnool,\nI customized this bespoke piece in your 3D Studio:\nProduct: Plinth Architectural Table\nFinish: ${activeFinish.name}\nEstimated Budget: ${formatPriceINR(Math.round(activeFinish.priceUSD * 83.5))}\nPlease confirm availability and showroom delivery.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

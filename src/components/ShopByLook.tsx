@@ -15,7 +15,7 @@ const looks: { title: string; href: string; poster: string; video?: string; inst
   { title: "Power Recliners", href: "/recliners-kurnool", poster: "/images/catalogue-recliner-featured.jpg" },
   { title: "Wooden Queen Bed", href: "/beds-cots-kurnool", poster: "/images/796767853_18093958568640692_8492671734547745348_n.webp" },
   { title: "Family Dining Sets", href: "/dining-tables-kurnool", poster: "/images/dining-space.jpg" },
-  { title: "Signature Living", href: "/sofas-kurnool", poster: "/images/hero.jpg", video: "/story.mp4" },
+  { title: "Signature Living", href: "/sofas-kurnool", poster: "/images/hero-poster-mobile.jpg", video: "/story.mp4" },
   { title: "Fluted Lounge Sofa", href: "/sofas-kurnool", poster: "/images/mf-fluted-luxury-lounge.jpg" },
   { title: "Bedroom Makeover", href: "/beds-cots-kurnool", poster: "/images/bedroom-space.jpg" },
   { title: "Curtains & Blinds", href: "/curtains-blinds-kurnool", poster: "/images/banner-living.jpg" },

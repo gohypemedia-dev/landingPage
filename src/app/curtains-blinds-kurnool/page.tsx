@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 
 export const metadata: Metadata = {
-  title: "Curtains & Blinds in Kurnool | Motorized Blackout Drapes & Sheer Linens — Casablanca Sofas",
+  title: "Curtains & Blinds in Kurnool | Motorized Blackout Drapes & Sheer Linens — Mallikarjuna Furniture World",
   description:
-    "Tailored motorized blackout curtains and architectural blinds in Kurnool at Casablanca Sofas. Free in-home measurement and installation across Kurnool town.",
+    "Tailored motorized blackout curtains and architectural blinds in Kurnool at Mallikarjuna Furniture World. Free in-home measurement and installation across Kurnool town.",
 };
 
 export default function CurtainsBlindsKurnoolPage() {

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 
 export const metadata: Metadata = {
-  title: "Teakwood Beds & Cots in Kurnool | King Size Hydraulic Beds — Casablanca Sofas",
+  title: "Teakwood Beds & Cots in Kurnool | King Size Hydraulic Beds — Mallikarjuna Furniture World",
   description:
-    "Handcrafted solid Burma teakwood beds and cots in Kurnool at Casablanca Sofas. German hydraulic storage, upholstered headboards, and 15-year termite guarantee.",
+    "Handcrafted solid Burma teakwood beds and cots in Kurnool at Mallikarjuna Furniture World. German hydraulic storage, upholstered headboards, and 15-year termite guarantee.",
 };
 
 export default function BedsCotsKurnoolPage() {

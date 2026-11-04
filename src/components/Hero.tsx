@@ -61,7 +61,7 @@ export const Hero: React.FC = () => {
         <video
           ref={desktopVideoRef}
           src="/hero.mp4"
-          poster="/images/hero.jpg"
+          poster="/images/hero-poster.jpg"
           autoPlay
           loop
           muted
@@ -75,6 +75,7 @@ export const Hero: React.FC = () => {
         <video
           ref={mobileVideoRef}
           src="/story.mp4"
+          poster="/images/hero-poster-mobile.jpg"
           autoPlay
           loop
           muted

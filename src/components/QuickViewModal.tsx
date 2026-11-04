@@ -298,7 +298,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
               paddingRight: "2.75rem",
             }}
           >
-            {product.category} · {product.designer || "Casablanca Luxury Living"}
+            {product.category} · {product.designer || "Mallikarjuna Luxury Living"}
           </div>
 
           {/* Title */}

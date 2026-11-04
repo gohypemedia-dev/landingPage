@@ -4,8 +4,8 @@ import { SHOWROOM_INFO } from "@/data/products";
 import { InfoPage } from "@/components/shop/InfoPage";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Casablanca Sofas Kurnool",
-  description: "Terms for using the Casablanca Sofas website and buying furniture from our Kurnool showroom.",
+  title: "Terms & Conditions | Mallikarjuna Furniture World Kurnool",
+  description: "Terms for using the Mallikarjuna Furniture World website and buying furniture from our Kurnool showroom.",
 };
 
 // DRAFT: review with a legal advisor and fill in the [bracketed] details before publishing.

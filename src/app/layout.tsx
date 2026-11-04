@@ -6,11 +6,11 @@ import { AutoInquiryPopup } from "@/components/AutoInquiryPopup";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://casablancasofas.com"),
-  title: "Casablanca Sofas | Premium Furniture & Living Solutions",
+  title: "Mallikarjuna Furniture World | Premium Furniture & Living Solutions",
   description:
-    "Explore luxury sofas, dining tables, cots, curtains, and mattresses at Casablanca Sofas. Browse our collection and enquire on WhatsApp.",
+    "Explore luxury sofas, dining tables, cots, curtains, and mattresses at Mallikarjuna Furniture World. Browse our collection and enquire on WhatsApp.",
   keywords: [
-    "Casablanca Sofas",
+    "Mallikarjuna Furniture World",
     "Luxury sofas",
     "Motorized recliners",
     "Teak wood beds",
@@ -19,17 +19,17 @@ export const metadata: Metadata = {
     "Premium furniture solutions",
   ],
   openGraph: {
-    title: "Casablanca Sofas | Premium Furniture & Living Solutions",
+    title: "Mallikarjuna Furniture World | Premium Furniture & Living Solutions",
     description:
-      "Explore luxury sofas, dining tables, cots, curtains, and mattresses at Casablanca Sofas.",
+      "Explore luxury sofas, dining tables, cots, curtains, and mattresses at Mallikarjuna Furniture World.",
     url: "https://casablancasofas.com",
-    siteName: "Casablanca Sofas",
+    siteName: "Mallikarjuna Furniture World",
     images: [
       {
         url: "/og.jpg",
         width: 1200,
         height: 630,
-        alt: "Casablanca Sofas Kurnool Luxury Living Room",
+        alt: "Mallikarjuna Furniture World Kurnool Luxury Living Room",
       },
     ],
     locale: "en_IN",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Casablanca Sofas | Premium Furniture & Living Solutions",
+    title: "Mallikarjuna Furniture World | Premium Furniture & Living Solutions",
     description:
-      "Explore luxury sofas, motorized recliners, solid teakwood beds and Italian marble dining suites at Casablanca Sofas.",
+      "Explore luxury sofas, motorized recliners, solid teakwood beds and Italian marble dining suites at Mallikarjuna Furniture World.",
     images: ["/og.jpg"],
   },
 };
@@ -54,7 +54,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "FurnitureStore",
     name: SHOWROOM_INFO.brandName,
-    alternateName: "Casablanca Sofas Kurnool",
+    alternateName: "Mallikarjuna Furniture World Kurnool",
     image: "https://casablancasofas.com/og.jpg",
     telephone: SHOWROOM_INFO.phone,
     email: SHOWROOM_INFO.email,

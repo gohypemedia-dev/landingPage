@@ -108,7 +108,7 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
               <p>Our {baseName.toLowerCase()} range is available at our Kurnool showroom. Message us for designs, sizes and prices.</p>
               <a
                 href={`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(
-                  `Hello Casablanca Sofas Kurnool, please share your ${baseName.toLowerCase()} designs and prices.`
+                  `Hello Mallikarjuna Furniture World Kurnool, please share your ${baseName.toLowerCase()} designs and prices.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

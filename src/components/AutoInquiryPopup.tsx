@@ -152,7 +152,7 @@ export const AutoInquiryPopup: React.FC = () => {
 
     setIsSubmitting(true);
 
-    let message = `*Hello Casablanca Sofas Kurnool,*\n`;
+    let message = `*Hello Mallikarjuna Furniture World Kurnool,*\n`;
     message += `I would like to inquire about your furniture collection:\n\n`;
     message += `👤 *Name:* ${formData.name.trim()}\n`;
     message += `📱 *Phone:* ${formData.phone.trim()}\n`;
@@ -230,7 +230,8 @@ export const AutoInquiryPopup: React.FC = () => {
                     />
                   ))}
                   <div className="inquiry-promo-copy">
-                    <BrandLogo height={34} inverted={true} className="inquiry-promo-logo" />                  </div>
+                    <BrandLogo height={26} className="inquiry-promo-logo" />
+                  </div>
 
                   {PROMO_SLIDES.length > 1 && (
                     <div className="inquiry-promo-dots" role="tablist" aria-label="Banner images">
@@ -373,7 +374,7 @@ export const AutoInquiryPopup: React.FC = () => {
 
                 <div className="inquiry-success-actions">
                   <a
-                    href={`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(`Hello Casablanca Sofas Kurnool, I submitted an inquiry for ${formData.category} on your website. My name is ${formData.name}.`)}`}
+                    href={`https://wa.me/${SHOWROOM_INFO.whatsappNumber}?text=${encodeURIComponent(`Hello Mallikarjuna Furniture World Kurnool, I submitted an inquiry for ${formData.category} on your website. My name is ${formData.name}.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inquiry-btn-whatsapp"

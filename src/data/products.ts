@@ -1,8 +1,8 @@
 import { CurrencyCode, CurrencyConfig, LookbookRoom, MaterialSpotlight, PressQuote, Product, ReviewItem } from "@/types";
 
 export const SHOWROOM_INFO = {
-  brandName: "Casablanca Sofas",
-  shortName: "Casablanca Sofas",
+  brandName: "Mallikarjuna Furniture World",
+  shortName: "Mallikarjuna Furniture World",
   tagline: "Comfort. Quality. Timeless Living.",
   city: "Kurnool",
   state: "Andhra Pradesh",
@@ -71,7 +71,7 @@ export const getWhatsAppEnquiryUrl = (
   color?: string,
   budget?: string
 ): string => {
-  let msg = `Hello Casablanca Sofas,\nI am interested in this product:\nProduct: ${productName}`;
+  let msg = `Hello Mallikarjuna Furniture World,\nI am interested in this product:\nProduct: ${productName}`;
   if (config) msg += `\nConfiguration: ${config}`;
   if (color) msg += `\nPreferred colour: ${color}`;
   if (budget) msg += `\nBudget: ${budget}`;
@@ -93,7 +93,7 @@ export const getShowroomBookingWhatsAppUrl = (
   time?: string,
   interest?: string
 ): string => {
-  let msg = `Hello Casablanca Sofas Kurnool,\nI would like to plan a visit to your showroom near Nandyal Check Post.`;
+  let msg = `Hello Mallikarjuna Furniture World Kurnool,\nI would like to plan a visit to your showroom near Nandyal Check Post.`;
   if (date) msg += `\nPreferred Date: ${date}`;
   if (time) msg += `\nPreferred Time: ${time}`;
   if (interest) msg += `\nLooking for: ${interest}`;
@@ -158,7 +158,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 650,
     priceINR: 48000,
     priceOnEnquiry: false,
-    designer: "Casablanca Signature Living",
+    designer: "Mallikarjuna Signature Living",
     year: 2025,
     description: "Designed for modern Kurnool living rooms seeking understated luxury. Features curved armrests, 40-density cold-cure foam cores, and solid treated teak inner frames backed by our 15-year termite-proof warranty.",
     details: [
@@ -197,7 +197,7 @@ export const PRODUCTS: Product[] = [
       },
       {
         title: "Warranty & Showroom Display",
-        content: "Includes 15-year structural teakwood warranty and 5-year cushion sag warranty. On live display at Casablanca Sofas, near Nandyal Check Post, Kurnool.",
+        content: "Includes 15-year structural teakwood warranty and 5-year cushion sag warranty. On live display at Mallikarjuna Furniture World, near Nandyal Check Post, Kurnool.",
       },
     ],
     rating: 4.9,
@@ -218,7 +218,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 980,
     priceINR: 78000,
     priceOnEnquiry: true,
-    designer: "Casablanca Couture Atelier",
+    designer: "Mallikarjuna Couture Atelier",
     year: 2026,
     description: "An architectural statement piece featuring a sweeping organic arc that redefines high-end living spaces. Soft, rounded contours invite intimate conversation and cocooning comfort.",
     details: [
@@ -269,7 +269,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 480,
     priceINR: 36000,
     priceOnEnquiry: false,
-    designer: "Casablanca Ergonomics Lab",
+    designer: "Mallikarjuna Ergonomics Lab",
     year: 2025,
     description: "Engineered for pure relaxation after long days. The motorized zero-gravity mechanism gently elevates feet above heart level to optimize circulation and alleviate spinal pressure.",
     details: [
@@ -321,7 +321,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 950,
     priceINR: 76000,
     priceOnEnquiry: false,
-    designer: "Casablanca Master Joinery",
+    designer: "Mallikarjuna Master Joinery",
     year: 2024,
     description: "An heirloom-grade bedstead crafted from mature 100% solid Burma teakwood. Features an understated fluted architectural headboard and effortless German gas-lift hydraulic storage to keep bedroom clutter out of sight.",
     details: [
@@ -372,7 +372,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 1100,
     priceINR: 88000,
     priceOnEnquiry: false,
-    designer: "Casablanca Architectural Dining",
+    designer: "Mallikarjuna Architectural Dining",
     year: 2025,
     description: "The centerpiece of memorable family dinners. A 30mm thick slab of polished Italian Onyx marble paired with 6 ergonomically cushioned teak dining chairs upholstered in stain-resistant velvet.",
     details: [
@@ -418,7 +418,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 1450,
     priceINR: 118000,
     priceOnEnquiry: true,
-    designer: "Casablanca Signature Living",
+    designer: "Mallikarjuna Signature Living",
     year: 2026,
     description: "Crafted for grand living rooms and duplexes. Unites wide track arms with deep feather-blend down cushions for the ultimate lounging experience.",
     details: [
@@ -458,7 +458,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 850,
     priceINR: 68000,
     priceOnEnquiry: false,
-    designer: "Casablanca Heritage Masters",
+    designer: "Mallikarjuna Heritage Masters",
     year: 2024,
     description: "The quintessential symbol of British colonial elegance and timeless majesty. Each button is deep-pulled by hand into seasoned teak framing.",
     details: [
@@ -498,7 +498,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 240,
     priceINR: 18000,
     priceOnEnquiry: false,
-    designer: "Casablanca Soft Furnishings",
+    designer: "Mallikarjuna Soft Furnishings",
     year: 2025,
     description: "Elevate your windows with heavy triple-weave acoustic blackout fabrics paired with ethereal sheer linen panels. Available with Tuya or Alexa motorized smart tracks.",
     details: [
@@ -538,7 +538,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 420,
     priceINR: 32000,
     priceOnEnquiry: false,
-    designer: "Casablanca Architectural Studio",
+    designer: "Mallikarjuna Architectural Studio",
     year: 2025,
     description: "A sculptural monolithic statement piece crafted from solid honed Kunis Breccia limestone. Brings tactile weight, natural geological veining, and grounding serenity into modern living spaces.",
     details: [
@@ -576,7 +576,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 890,
     priceINR: 72000,
     priceOnEnquiry: false,
-    designer: "Casablanca Bedroom Atelier",
+    designer: "Mallikarjuna Bedroom Atelier",
     year: 2025,
     description: "Designed for restorative rest and quiet luxury. Combines a deeply padded button-tufted acoustic headboard with 100% solid Burma teakwood frame and 1,200 liters of dust-free hydraulic storage.",
     details: [
@@ -614,7 +614,7 @@ export const PRODUCTS: Product[] = [
     priceUSD: 1150,
     priceINR: 92000,
     priceOnEnquiry: false,
-    designer: "Casablanca Signature Living",
+    designer: "Mallikarjuna Signature Living",
     year: 2025,
     description: "An architectural full-room living suite designed for luxury residences. Combines deep, supportive ergonomics with tailored Italian chenille upholstery and solid teakwood internal construction.",
     details: [
@@ -760,7 +760,7 @@ export const CURRENT_PROMOTIONS = [
 export const PRESS_QUOTES: PressQuote[] = [
   {
     publication: "Rayalaseema Architectural Digest",
-    quote: "Casablanca Sofas has elevated furniture retail in Kurnool to the standards of luxury international design ateliers.",
+    quote: "Mallikarjuna Furniture World has elevated furniture retail in Kurnool to the standards of luxury international design ateliers.",
     authorOrIssue: "Annual Design Edition 2025",
   },
   {
@@ -783,7 +783,7 @@ export const REVIEWS: ReviewItem[] = [
     location: "Doctors Colony, Kurnool",
     rating: 5,
     date: "March 2026",
-    comment: "Casablanca Sofas is without question the finest furniture showroom in Kurnool. We bought the 6-seater Italian marble dining table and the CloudComfort recliner. The quality of Burma teak and finishing matches international standards.",
+    comment: "Mallikarjuna Furniture World is without question the finest furniture showroom in Kurnool. We bought the 6-seater Italian marble dining table and the CloudComfort recliner. The quality of Burma teak and finishing matches international standards.",
     productName: "Italian Marble Dining & Motorized Recliner",
   },
   {
@@ -803,7 +803,7 @@ export const REVIEWS: ReviewItem[] = [
     location: "Nandyal Road, Kurnool",
     rating: 5,
     date: "January 2026",
-    comment: "For my new residence, I compared showrooms across Hyderabad and Kurnool. Casablanca Sofas gave superior teakwood quality and 15-year termite guarantee at far better pricing. Highly recommended!",
+    comment: "For my new residence, I compared showrooms across Hyderabad and Kurnool. Mallikarjuna Furniture World gave superior teakwood quality and 15-year termite guarantee at far better pricing. Highly recommended!",
     productName: "Solid Teakwood Heritage Bedroom Set",
   },
 ];
@@ -897,21 +897,21 @@ export const MATERIAL_SPOTLIGHTS: MaterialSpotlight[] = [
 export const DESIGNERS = [
   {
     role: "HEAD OF HEIRLOOM JOINERY",
-    name: "Casablanca Master Woodworking Guild",
+    name: "Mallikarjuna Master Woodworking Guild",
     base: "Kurnool Showroom Atelier",
     bio: "Pioneering traditional mortise-and-tenon teakwood joinery in Rayalaseema for over 27 years. Every cot, dining set, and sofa armature is hand-planed and inspected for flawless grain balance.",
     signature: "Heritage Teakwood King Cot & Onyx Dining Suite",
   },
   {
     role: "ERGONOMICS & MOTORIZED COMFORT",
-    name: "Casablanca Recliner Engineering Lab",
+    name: "Mallikarjuna Recliner Engineering Lab",
     base: "In Collaboration with OKIN Germany",
     bio: "Focused on orthopedic posture alignment, zero-gravity weightlessness, and motorized lounge mechanisms designed to relieve lower back pain and fatigue in busy professionals.",
     signature: "CloudComfort Motorized Zero-Gravity Recliner",
   },
   {
     role: "CURATED TEXTILES & INTERIOR STYLING",
-    name: "Casablanca Soft Furnishings Studio",
+    name: "Mallikarjuna Soft Furnishings Studio",
     base: "Kurnool Showroom",
     bio: "Specializing in acoustic blackout drapery, Belgian sheer linens, and tactile European bouclés. Offering free laser in-home measurement across Kurnool and Nandyal.",
     signature: "Bespoke Textured Velvet & Smart Motorized Drapes",

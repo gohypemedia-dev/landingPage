@@ -3,9 +3,9 @@ import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 import { PRODUCTS } from "@/data/products";
 
 export const metadata: Metadata = {
-  title: "New Arrivals | All Furniture in Kurnool — Casablanca Sofas",
+  title: "New Arrivals | All Furniture in Kurnool — Mallikarjuna Furniture World",
   description:
-    "Explore the complete catalogue of luxury living room, bedroom, and dining furniture at Casablanca Sofas in Kurnool. 15-year Burma teakwood guarantee.",
+    "Explore the complete catalogue of luxury living room, bedroom, and dining furniture at Mallikarjuna Furniture World in Kurnool. 15-year Burma teakwood guarantee.",
 };
 
 // "New Arrivals" in the navbar: every product, newest first

@@ -3,9 +3,9 @@ import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 import { getCategoryProducts } from "@/data/categories";
 
 export const metadata: Metadata = {
-  title: "Orthopedic Mattresses in Kurnool | Pocket Spring & Latex — Casablanca Sofas",
+  title: "Orthopedic Mattresses in Kurnool | Pocket Spring & Latex — Mallikarjuna Furniture World",
   description:
-    "Explore orthopedic pocket-spring and natural latex mattresses in Kurnool at Casablanca Sofas. 10-year replacement warranty and 100-night trial.",
+    "Explore orthopedic pocket-spring and natural latex mattresses in Kurnool at Mallikarjuna Furniture World. 10-year replacement warranty and 100-night trial.",
 };
 
 export default function MattressesKurnoolPage() {

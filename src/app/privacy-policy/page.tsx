@@ -3,8 +3,8 @@ import { SHOWROOM_INFO } from "@/data/products";
 import { InfoPage } from "@/components/shop/InfoPage";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Casablanca Sofas Kurnool",
-  description: "How Casablanca Sofas collects, uses and protects the personal information you share with us.",
+  title: "Privacy Policy | Mallikarjuna Furniture World Kurnool",
+  description: "How Mallikarjuna Furniture World collects, uses and protects the personal information you share with us.",
 };
 
 // DRAFT: review with a legal advisor and fill in the [bracketed] details before publishing.

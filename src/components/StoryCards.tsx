@@ -10,9 +10,9 @@ const cards = [
   {
     heading: "About",
     image: "/images/mf-showroom-grand-hall.jpg",
-    alt: "Inside the Casablanca Sofas showroom",
+    alt: "Inside the Mallikarjuna Furniture World showroom",
     title: "Kurnool's furniture showroom since 1998",
-    text: "Casablanca Sofas brings sofas, recliners, beds, dining sets, mattresses and curtains under one roof, so you can see, sit and compare before you buy.",
+    text: "Mallikarjuna Furniture World brings sofas, recliners, beds, dining sets, mattresses and curtains under one roof, so you can see, sit and compare before you buy.",
     cta: "Read More",
     href: "/furniture-showroom-kurnool",
     external: false,
@@ -32,7 +32,7 @@ const cards = [
   {
     heading: "Visit Us",
     image: "/images/showroom-kurnool-main.jpg",
-    alt: "Casablanca Sofas showroom in Kurnool",
+    alt: "Mallikarjuna Furniture World showroom in Kurnool",
     title: "Our Kurnool Showroom",
     text: `${SHOWROOM_INFO.address}. ${SHOWROOM_INFO.timing}.`,
     cta: "Get Directions",
@@ -106,7 +106,7 @@ export const StoryCards: React.FC = () => {
   );
 
   return (
-    <section className="story" aria-label="About Casablanca Sofas">
+    <section className="story" aria-label="About Mallikarjuna Furniture World">
       {mounted && isMobile ? (
         <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
           {/* Sliding track */}
