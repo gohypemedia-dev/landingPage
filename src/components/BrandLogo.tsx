@@ -7,14 +7,16 @@ interface BrandLogoProps {
   isScrolled?: boolean;
   size?: "sm" | "md" | "lg" | "xl";
   height?: number;
-  /** Set when the logo sits on a light surface. Otherwise it gets a thin white outline so the red wordmark stays legible on dark/glass backgrounds. */
+  /** Set when the logo sits on a light surface (uses the original dark-ink logo). Otherwise the ivory/gold variant is used so it reads on dark, glass or photo backgrounds. */
   inverted?: boolean;
   preload?: boolean;
 }
 
-// Intrinsic size of /images/mfw-logo.png (transparent background)
-const LOGO_WIDTH = 1350;
-const LOGO_HEIGHT = 278;
+// Both files share the same intrinsic size (transparent background)
+const LOGO_SRC_LIGHT_SURFACE = "/images/mallikarjuna-logo.png";
+const LOGO_SRC_DARK_SURFACE = "/images/mallikarjuna-logo-light.png";
+const LOGO_WIDTH = 1384;
+const LOGO_HEIGHT = 359;
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = "",
@@ -25,13 +27,13 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   preload = false,
 }) => {
   const heights: Record<string, number> = {
-    sm: 28,
-    md: 34,
-    lg: isScrolled ? 34 : 38,
-    xl: 80,
+    sm: 34,
+    md: 42,
+    lg: isScrolled ? 44 : 50,
+    xl: 96,
   };
 
-  const height = customHeight ?? heights[size] ?? 38;
+  const height = customHeight ?? heights[size] ?? 50;
 
   return (
     <span
@@ -39,11 +41,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       style={{ "--brand-logo-default-height": `${height}px` } as React.CSSProperties}
     >
       <Image
-        src="/images/mfw-logo.png"
+        src={inverted ? LOGO_SRC_LIGHT_SURFACE : LOGO_SRC_DARK_SURFACE}
         alt={SHOWROOM_INFO.brandName}
         width={LOGO_WIDTH}
         height={LOGO_HEIGHT}
-        sizes="400px"
+        sizes="480px"
         preload={preload}
         draggable={false}
       />

@@ -369,15 +369,15 @@ h1, h2, h3, h4, .font-serif {
 
 .brand-logo-container img {
   display: block;
-  height: var(--brand-logo-height, var(--brand-logo-default-height, 38px));
+  height: var(--brand-logo-height, var(--brand-logo-default-height, 50px));
   width: auto;
   max-width: 100%;
   transition: height 0.25s ease;
 }
 
-/* Thin white outline keeps the red wordmark legible on the dark glass header */
+/* Ivory/gold variant on dark glass or photos: soft shadow lifts it off busy imagery */
 .brand-logo--on-dark img {
-  filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+  filter: drop-shadow(0 1px 2px rgba(6, 17, 28, 0.35));
 }
 
 /* =========================================================
@@ -441,11 +441,11 @@ h1, h2, h3, h4, .font-serif {
 }
 
 .header-brand-wrap .brand-logo-container {
-  --brand-logo-height: 38px;
+  --brand-logo-height: 50px;
 }
 
 .main-header.is-scrolled .header-brand-wrap .brand-logo-container {
-  --brand-logo-height: 34px;
+  --brand-logo-height: 44px;
 }
 
 .nav-link {
@@ -636,7 +636,7 @@ h1, h2, h3, h4, .font-serif {
     padding: 0;
   }
   .header-brand-wrap .brand-logo-container {
-    --brand-logo-height: 26px !important;
+    --brand-logo-height: 38px !important;
   }
   .mobile-action-icon {
     display: inline-flex;
@@ -657,7 +657,7 @@ h1, h2, h3, h4, .font-serif {
     padding: 0.25rem;
   }
   .header-brand-wrap .brand-logo-container {
-    --brand-logo-height: 24px !important;
+    --brand-logo-height: 34px !important;
   }
 }
 
@@ -3836,7 +3836,7 @@ html, body {
   }
 
   .inquiry-promo-logo {
-    --brand-logo-height: 22px !important;
+    --brand-logo-height: 30px !important;
   }
 
 
@@ -6008,7 +6008,7 @@ html, body {
 /* Laptops (1101–1300px, e.g. 1920px screens at 150% scaling): compact header so the full menu still fits */
 @media (min-width: 1101px) and (max-width: 1300px) {
   .header-inner { padding: 0 1rem; column-gap: 1rem; }
-  .header-brand-wrap .brand-logo-container { --brand-logo-height: 34px; }
+  .header-brand-wrap .brand-logo-container { --brand-logo-height: 44px; }
   .nav-cats { gap: 0.95rem; }
   .nav-cats .nav-link { font-size: 0.64rem; letter-spacing: 0.07em; }
   .header-actions { gap: 0.4rem; }
@@ -6333,7 +6333,7 @@ html, body {
 /* Footer on phones: same compact text scale as the rest of the mobile site */
 @media (max-width: 640px) {
   .fx { padding: 2.5rem 1.25rem 0; }
-  .fx-brand .brand-logo-container { --brand-logo-height: 52px !important; }
+  .fx-brand .brand-logo-container { --brand-logo-height: 64px !important; }
   .fx-cols { gap: 1.75rem 1rem; padding-bottom: 2rem; }
   .fx-col h4, .fx-col .fx-news-copy h4 { margin: 0 0 0.7rem; font-size: 0.92rem; }
   .fx-col .fx-sub, .fx-col .fx-news-copy h4 { margin-top: 1.25rem; }

@@ -230,7 +230,7 @@ export const AutoInquiryPopup: React.FC = () => {
                     />
                   ))}
                   <div className="inquiry-promo-copy">
-                    <BrandLogo height={26} className="inquiry-promo-logo" />
+                    <BrandLogo height={36} className="inquiry-promo-logo" />
                   </div>
 
                   {PROMO_SLIDES.length > 1 && (
