@@ -4,7 +4,9 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types";
-import { PRODUCTS, SHOWROOM_INFO, formatPriceINR } from "@/data/products";
+import { SHOWROOM_INFO, formatPriceINR } from "@/data/products";
+import { useCatalog } from "@/lib/catalog/context";
+import { categoryProducts as productsInCategory } from "@/lib/catalog/queries";
 import { ShopShell } from "@/components/shop/ShopShell";
 import { ProductTile } from "@/components/shop/ProductTile";
 
@@ -21,6 +23,7 @@ export interface CategoryLandingProps {
   heading: string;
   subheading: string;
   introduction: string;
+  /** Category slug whose products to list (Admin → Products → "Show in categories"). */
   filterCategoryKey?: string;
   categoryTiles: CategoryTile[];
   seoFaqs?: { question: string; answer: string }[];
@@ -64,9 +67,10 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
   // Some pages are already named "All …" (e.g. "All Furniture"), so don't prefix it again
   const baseName = categoryName.replace(/^All\s+/i, "");
 
+  const catalog = useCatalog();
   const categoryProducts = useMemo(
-    () => products ?? (filterCategoryKey ? PRODUCTS.filter((p) => p.category === filterCategoryKey) : PRODUCTS),
-    [products, filterCategoryKey]
+    () => products ?? (filterCategoryKey ? productsInCategory(catalog, filterCategoryKey) : catalog.products),
+    [products, filterCategoryKey, catalog]
   );
 
 

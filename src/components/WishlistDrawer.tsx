@@ -4,7 +4,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CurrencyCode, Product } from "@/types";
-import { PRODUCTS, formatPriceWithCurrency, SHOWROOM_INFO } from "@/data/products";
+import { formatPriceWithCurrency, SHOWROOM_INFO } from "@/data/products";
+import { useCatalog } from "@/lib/catalog/context";
 
 interface WishlistDrawerProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export const WishlistDrawer: React.FC<WishlistDrawerProps> = ({
   onRemoveWishlist,
   onMoveToCart,
 }) => {
+  const { products: PRODUCTS } = useCatalog();
   if (!isOpen) return null;
 
   const products = PRODUCTS.filter((p) => wishlistIds.includes(p.id));

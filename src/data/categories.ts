@@ -1,7 +1,7 @@
 import { Product } from "@/types";
-import { PRODUCTS } from "@/data/products";
 
-// Every shoppable category in one place: Popular Categories circles, the Shop menu and the category pages.
+// The built-in categories: the starting point that Admin → Products → Import copies into the database,
+// and what the site shows until then. Live categories come from useCatalog() / getCatalog().
 // `match` decides which products belong; a product can appear in more than one category (e.g. a centre table is also a coffee table).
 export type Room = "living" | "bedroom" | "mattresses" | "dining" | "study" | "outdoor" | "decor" | "furnishings";
 
@@ -46,10 +46,3 @@ export const ROOMS: { key: Room; label: string }[] = [
   { key: "furnishings", label: "Furnishings" },
 ];
 
-export const getCategoryProducts = (slug: string): Product[] => {
-  const cat = SHOP_CATEGORIES.find((c) => c.slug === slug);
-  return cat ? PRODUCTS.filter(cat.match) : [];
-};
-
-// Categories that live under /category/<slug> (the rest have their own Kurnool landing pages)
-export const DYNAMIC_CATEGORIES = SHOP_CATEGORIES.filter((c) => c.href.startsWith("/category/"));

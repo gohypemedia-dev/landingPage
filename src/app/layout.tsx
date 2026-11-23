@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { SHOWROOM_INFO } from "@/data/products";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { AutoInquiryPopup } from "@/components/AutoInquiryPopup";
+import { StorefrontOnly } from "@/components/StorefrontOnly";
+import { CatalogProvider } from "@/lib/catalog/context";
+import { getCatalog } from "@/lib/server/catalog";
+import { getSiteContent } from "@/lib/server/site-content";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://casablancasofas.com"),
@@ -44,11 +49,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Products and categories from the admin (cached until an admin saves), for every page and the header.
+  // The inquiry popup's text and photos come from Admin → Inquiry popup.
+  const [catalog, content] = await Promise.all([getCatalog(), getSiteContent()]);
+
   // LocalBusiness structured data for Kurnool Local SEO (Section 8 Brief)
   const localBusinessSchema = {
     "@context": "https://schema.org",
@@ -103,9 +112,20 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
-        <SmoothScroll />
-        {children}
-        <AutoInquiryPopup />
+        {/* Suspense: reading the pathname must not block prerendering of dynamic routes */}
+        <Suspense fallback={null}>
+          <StorefrontOnly>
+            <SmoothScroll />
+          </StorefrontOnly>
+        </Suspense>
+        <CatalogProvider value={catalog}>
+          {children}
+          <Suspense fallback={null}>
+            <StorefrontOnly>
+              <AutoInquiryPopup content={content.inquiryPopup} />
+            </StorefrontOnly>
+          </Suspense>
+        </CatalogProvider>
       </body>
     </html>
   );

@@ -4,22 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useSiteContent } from "@/lib/site-content/context";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-// Portrait 9:16 reels. When a look is the front card it plays, in this order of preference:
-//   instagram: a public Instagram reel link, e.g. "https://www.instagram.com/reel/ABC123xyz/" (Instagram's own embed player)
-//   video:     a video file in /public, e.g. "/reels/my-reel.mp4"
+// Portrait 9:16 reels, edited in Admin → Homepage sections → Shop by look.
+// When a look is the front card it plays, in this order of preference:
+//   instagram: a public Instagram reel link (Instagram's own embed player)
+//   video:     an uploaded video file
 // Otherwise (and on the side cards) the poster image is shown.
-const looks: { title: string; href: string; poster: string; video?: string; instagram?: string }[] = [
-  { title: "Power Recliners", href: "/recliners-kurnool", poster: "/images/catalogue-recliner-featured.jpg" },
-  { title: "Wooden Queen Bed", href: "/beds-cots-kurnool", poster: "/images/796767853_18093958568640692_8492671734547745348_n.webp" },
-  { title: "Family Dining Sets", href: "/dining-tables-kurnool", poster: "/images/dining-space.jpg" },
-  { title: "Signature Living", href: "/sofas-kurnool", poster: "/images/hero-poster-mobile.jpg", video: "/story.mp4" },
-  { title: "Fluted Lounge Sofa", href: "/sofas-kurnool", poster: "/images/mf-fluted-luxury-lounge.jpg" },
-  { title: "Bedroom Makeover", href: "/beds-cots-kurnool", poster: "/images/bedroom-space.jpg" },
-  { title: "Curtains & Blinds", href: "/curtains-blinds-kurnool", poster: "/images/banner-living.jpg" },
-];
 
 // "https://www.instagram.com/reel/ABC123/?igsh=..." -> "https://www.instagram.com/reel/ABC123/embed/"
 const instagramEmbed = (url: string) => {
@@ -31,6 +24,8 @@ const instagramEmbed = (url: string) => {
 const layoutFor = (w: number) => (w <= 640 ? { card: 210, spread: 72 } : w <= 1100 ? { card: 250, spread: 135 } : { card: 290, spread: 175 });
 
 export const ShopByLook: React.FC = () => {
+  const { shopByLook } = useSiteContent();
+  const looks = shopByLook.looks;
   // The video reel ("Signature Living") stays in front until the visitor moves the carousel
   const [active, setActive] = useState(() => Math.max(0, looks.findIndex((l) => l.video || l.instagram)));
   const [muted, setMuted] = useState(true);
@@ -47,6 +42,7 @@ export const ShopByLook: React.FC = () => {
   }, []);
 
   const cardHeight = Math.round((layout.card * 16) / 9);
+  if (looks.length === 0) return null;
 
   return (
     <section
@@ -56,7 +52,7 @@ export const ShopByLook: React.FC = () => {
     >
       <div className="audo-header-row sbl-head">
         <h2 id="sbl-heading" className="audo-tab-btn is-active">
-          Shop By Look
+          {shopByLook.heading}
         </h2>
       </div>
 
@@ -82,7 +78,7 @@ export const ShopByLook: React.FC = () => {
 
           return (
             <motion.div
-              key={look.title}
+              key={i}
               className={`sbl-card${isActive ? " is-active" : ""}`}
               initial={false}
               animate={{ x: d * layout.spread, scale: 1 - dist * 0.13, opacity: dist > 3 ? 0 : 1 }}

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { CurrencyCode, Product, ProductFinish } from "@/types";
 import { formatPriceWithCurrency, getWhatsAppEnquiryUrl } from "@/data/products";
 import { CollectionKey, collectionHref, getCollectionProducts } from "@/data/collections";
+import { useCatalog } from "@/lib/catalog/context";
 
 interface AudoProductStageProps {
   currency: CurrencyCode;
@@ -274,6 +275,7 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
   title,
   products,
 }) => {
+  const catalog = useCatalog();
   const [index, setIndex] = useState(0);
 
   const [VISIBLE, setVisible] = useState(3);
@@ -287,8 +289,8 @@ export const AudoProductStage: React.FC<AudoProductStageProps> = ({
 
   const tabProducts = React.useMemo(() => {
     if (products) return products;
-    return getCollectionProducts(collection);
-  }, [collection, products]);
+    return getCollectionProducts(catalog.products, collection);
+  }, [collection, products, catalog.products]);
 
   const maxIndex = Math.max(0, tabProducts.length - VISIBLE);
   const clamped = Math.min(index, maxIndex);

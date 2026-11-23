@@ -3,11 +3,14 @@ import path from "node:path";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PRODUCTS } from "@/data/products";
+import { findProduct } from "@/lib/catalog/queries";
+import { getCatalog } from "@/lib/server/catalog";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ id: p.id }));
+// Prerenders every product; ones added later in the admin render on first visit.
+export async function generateStaticParams() {
+  const { products } = await getCatalog();
+  return products.map((p) => ({ id: p.id }));
 }
 
 // Photos from public/images/products/<product-id>/ (sorted by file name):
@@ -33,7 +36,7 @@ const folderImages = (id: string) => {
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
-  const product = PRODUCTS.find((p) => p.id === id);
+  const product = findProduct(await getCatalog(), id);
   if (!product) return {};
   return {
     title: `${product.name} | Mallikarjuna Furniture World Kurnool`,
@@ -53,7 +56,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
 async function ProductContent({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = PRODUCTS.find((p) => p.id === id);
+  const product = findProduct(await getCatalog(), id);
   if (!product) notFound();
   const images = folderImages(id);
   return <ProductDetail product={product} extraImages={images.gallery} featureImages={images.features} />;

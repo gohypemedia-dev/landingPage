@@ -5,44 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SHOWROOM_INFO } from "@/data/products";
+import { useSiteContent } from "@/lib/site-content/context";
+import type { SiteContent } from "@/lib/site-content/schema";
 
-const cards = [
-  {
-    heading: "About",
-    image: "/images/mf-showroom-grand-hall.jpg",
-    alt: "Inside the Mallikarjuna Furniture World showroom",
-    title: "Kurnool's furniture showroom since 1998",
-    text: "Mallikarjuna Furniture World brings sofas, recliners, beds, dining sets, mattresses and curtains under one roof, so you can see, sit and compare before you buy.",
-    cta: "Read More",
-    href: "/furniture-showroom-kurnool",
-    external: false,
-    map: undefined as string | undefined,
-  },
-  {
-    heading: "International Collection",
-    image: "/images/mf-showroom-warehouse.jpg",
-    alt: "International furniture on display in the showroom",
-    title: "Designed abroad, ready to see in Kurnool.",
-    text: "Scandinavian designs, Italian marble, German recliner mechanisms and Belgian linen, on display at our showroom.",
-    cta: "Explore Collection",
-    href: "/collections/international-collection",
-    external: false,
-    map: undefined,
-  },
-  {
-    heading: "Visit Us",
-    image: "/images/showroom-kurnool-main.jpg",
-    alt: "Mallikarjuna Furniture World showroom in Kurnool",
-    title: "Our Kurnool Showroom",
-    text: `${SHOWROOM_INFO.address}. ${SHOWROOM_INFO.timing}.`,
-    cta: "Get Directions",
-    href: SHOWROOM_INFO.googleMapsUrl,
-    external: true,
-    map: SHOWROOM_INFO.mapEmbedUrl,
-  },
-];
+type StoryCard = SiteContent["storyCards"]["cards"][number];
 
+// Cards are edited in Admin → Homepage sections → Story cards
 export const StoryCards: React.FC = () => {
+  const cards = useSiteContent().storyCards.cards;
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -74,13 +44,13 @@ export const StoryCards: React.FC = () => {
     }
   };
 
-  const renderCard = (c: (typeof cards)[0]) => (
+  const renderCard = (c: StoryCard) => (
     <article className="story-card" style={{ width: "100%", height: "100%" }}>
       <h2 className="story-heading">{c.heading}</h2>
       <div className="story-img">
-        {c.map ? (
+        {c.showMap ? (
           <iframe
-            src={c.map}
+            src={SHOWROOM_INFO.mapEmbedUrl}
             title="Showroom location on Google Maps"
             className="story-map"
             loading="lazy"
@@ -88,7 +58,7 @@ export const StoryCards: React.FC = () => {
             allowFullScreen
           />
         ) : (
-          <Image src={c.image} alt={c.alt} fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
+          <Image src={c.image.src} alt={c.image.alt} fill sizes="(max-width: 900px) 100vw, 33vw" style={{ objectFit: "cover" }} />
         )}
       </div>
       <h3 className="story-title">{c.title}</h3>
@@ -104,6 +74,8 @@ export const StoryCards: React.FC = () => {
       )}
     </article>
   );
+
+  if (cards.length === 0) return null;
 
   return (
     <section className="story" aria-label="About Mallikarjuna Furniture World">
@@ -127,9 +99,9 @@ export const StoryCards: React.FC = () => {
                 alignItems: "flex-start",
               }}
             >
-              {cards.map((c) => (
+              {cards.map((c, i) => (
                 <div
-                  key={c.heading}
+                  key={i}
                   style={{
                     width: "100%",
                     minWidth: "100%",
@@ -219,8 +191,8 @@ export const StoryCards: React.FC = () => {
         </div>
       ) : (
         <div className="story-grid">
-          {cards.map((c) => (
-            <div key={c.heading}>{renderCard(c)}</div>
+          {cards.map((c, i) => (
+            <div key={i}>{renderCard(c)}</div>
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
-import { getCategoryProducts } from "@/data/categories";
+import { categoryProducts } from "@/lib/catalog/queries";
+import { getCatalog } from "@/lib/server/catalog";
 
 export const metadata: Metadata = {
   title: "Orthopedic Mattresses in Kurnool | Pocket Spring & Latex — Mallikarjuna Furniture World",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     "Explore orthopedic pocket-spring and natural latex mattresses in Kurnool at Mallikarjuna Furniture World. 10-year replacement warranty and 100-night trial.",
 };
 
-export default function MattressesKurnoolPage() {
+export default async function MattressesKurnoolPage() {
   const tiles: any[] = [];
 
   return (
@@ -19,7 +20,7 @@ export default function MattressesKurnoolPage() {
       heading="Discover Mattresses Engineered for Spine Alignment"
       introduction="Experience deep, restorative sleep free from partner motion disturbance. Our orthopedic sleep systems combine high-tensile carbon pocket springs with natural breathable latex layers to support your spine naturally."
       categoryTiles={tiles}
-      products={getCategoryProducts("mattresses")}
+      products={categoryProducts(await getCatalog(), "mattresses")}
       heroImage="/images/bedroom-space.jpg"
     />
   );

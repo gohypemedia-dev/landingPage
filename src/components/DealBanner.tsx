@@ -2,20 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useSiteContent } from "@/lib/site-content/context";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-// Seconds left until local midnight, so the deal "resets" every day.
-const secondsToMidnight = () => {
+// Seconds left: until local midnight (the deal "resets" every day), or until the
+// end time set in Admin → Offers & sales (entered in India time).
+const secondsLeft = (mode: "daily" | "until", endsAt: string) => {
   const now = new Date();
-  const end = new Date(now);
-  end.setHours(24, 0, 0, 0);
+  let end: Date;
+  if (mode === "until") {
+    end = new Date(`${endsAt}:00+05:30`);
+  } else {
+    end = new Date(now);
+    end.setHours(24, 0, 0, 0);
+  }
   return Math.max(0, Math.floor((end.getTime() - now.getTime()) / 1000));
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
-
-const banks = ["HDFC", "ICICI", "SBI", "AXIS"];
 
 // Shared with the product page trust strip
 export const TRUST_BADGES = [
@@ -82,20 +87,32 @@ export const TRUST_BADGES = [
   },
 ];
 
+// Sale text and banks are edited in Admin → Homepage sections → Deal strip
 export const DealBanner: React.FC = () => {
+  const { dealBanner: d } = useSiteContent();
   const [left, setLeft] = useState<number | null>(null);
+  const mode = d.timerMode;
 
   useEffect(() => {
-    const tick = () => setLeft(secondsToMidnight());
+    if (mode === "off") return;
+    const tick = () => setLeft(secondsLeft(mode, d.timerEndsAt));
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [mode, d.timerEndsAt]);
 
-  const timer =
+  // Days appear only when more than a day is left; a finished countdown is hidden.
+  const days = left === null ? 0 : Math.floor(left / 86400);
+  const timer: [string, string][] =
     left === null
-      ? ["--", "--", "--"]
-      : [pad(Math.floor(left / 3600)), pad(Math.floor((left % 3600) / 60)), pad(left % 60)];
+      ? [["--", "Hrs"], ["--", "Mins"], ["--", "Secs"]]
+      : [
+          ...(days > 0 ? ([[String(days), days === 1 ? "Day" : "Days"]] as [string, string][]) : []),
+          [pad(Math.floor((left % 86400) / 3600)), "Hrs"],
+          [pad(Math.floor((left % 3600) / 60)), "Mins"],
+          [pad(left % 60), "Secs"],
+        ];
+  const showTimer = mode !== "off" && !(mode === "until" && left === 0);
 
   return (
     <section className="deal" aria-label="Current offers">
@@ -103,36 +120,38 @@ export const DealBanner: React.FC = () => {
       <div className="deal-strip">
         <div className="deal-strip-inner">
           <div className="deal-timer-group">
-            <div>
-              <span className="deal-eyebrow">Limited Time Deal</span>
-              <div className="deal-timer" role="timer" aria-live="off">
-                {timer.map((v, i) => (
-                  <span key={i} className="deal-timer-box">
-                    <strong>{v}</strong>
-                    <small>{["Hrs", "Mins", "Secs"][i]}</small>
-                  </span>
-                ))}
+            {showTimer && (
+              <div>
+                <span className="deal-eyebrow">{d.eyebrow}</span>
+                <div className="deal-timer" role="timer" aria-live="off">
+                  {timer.map(([v, unit]) => (
+                    <span key={unit} className="deal-timer-box">
+                      <strong>{v}</strong>
+                      <small>{unit}</small>
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <div className="deal-sale">
-              <span className="deal-sale-badge">Royal Festive Sale</span>
-              <span className="deal-sale-off">Upto 70% OFF</span>
+              <span className="deal-sale-badge">{d.saleBadge}</span>
+              <span className="deal-sale-off">{d.saleOff}</span>
             </div>
           </div>
 
           <p className="deal-cashback">
-            <strong>2% Cashback</strong> on UPI Payments
+            <strong>{d.cashbackBold}</strong> {d.cashbackText}
           </p>
 
           <div className="deal-emi">
-            <span className="deal-emi-title">No Cost EMI 3 &amp; 6 Months <span className="deal-emi-on">available on</span></span>
+            <span className="deal-emi-title">{d.emiTitle} <span className="deal-emi-on">{d.emiOn}</span></span>
             <span className="deal-banks">
-              {banks.map((b) => (
-                <span key={b} className="deal-bank">{b}</span>
+              {d.banks.map((b, i) => (
+                <span key={i} className="deal-bank">{b}</span>
               ))}
-              <span className="deal-bank-more">+More</span>
+              {d.banksMore && <span className="deal-bank-more">{d.banksMore}</span>}
             </span>
-            <span className="deal-tnc">*T&amp;C, Min Purchase of Rs.5000/- and above</span>
+            <span className="deal-tnc">{d.terms}</span>
           </div>
         </div>
       </div>

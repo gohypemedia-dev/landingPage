@@ -4,8 +4,9 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CurrencyCode, Product } from "@/types";
-import { CATEGORIES_LIST, PRODUCTS, REVIEWS, formatPriceINR, formatPriceWithCurrency, getWhatsAppEnquiryUrl } from "@/data/products";
+import { CATEGORIES_LIST, REVIEWS, formatPriceINR, formatPriceWithCurrency, getWhatsAppEnquiryUrl } from "@/data/products";
 import { ShopShell } from "@/components/shop/ShopShell";
+import { useCatalog } from "@/lib/catalog/context";
 import { TRUST_BADGES } from "@/components/DealBanner";
 import { SAMPLE_REVIEWS } from "@/data/sampleReviews";
 import { ProductRow, emiPerMonth } from "@/components/shop/ProductTile";
@@ -53,6 +54,7 @@ const ProductDetailBody: React.FC<{
   toggleWishlist: (p: Product) => void;
   addToEnquiry: (p: Product, f: Product["finishes"][number], qty?: number) => void;
 }> = ({ product, extraImages, featureImages, currency, wishlistIds, toggleWishlist, addToEnquiry }) => {
+  const { products: PRODUCTS } = useCatalog();
   const gallery = useMemo(
     () =>
       Array.from(

@@ -2,15 +2,13 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-
-// The three lines of hero copy live here so they are easy to change.
-const HERO_EYEBROW = "NEW ARRIVALS";
-const HERO_TITLE = "New Designs.";
-const HERO_CTA = "Shop Now";
+import { useSiteContent } from "@/lib/site-content/context";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 export const Hero: React.FC = () => {
+  // Copy, videos and posters are edited in Admin → Homepage sections → Hero
+  const { hero } = useSiteContent();
   const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
@@ -60,8 +58,8 @@ export const Hero: React.FC = () => {
         {/* Desktop Landscape Video (16:9 / 1280x720) */}
         <video
           ref={desktopVideoRef}
-          src="/hero.mp4"
-          poster="/images/hero-poster.jpg"
+          src={hero.desktopVideo}
+          poster={hero.desktopPoster || undefined}
           autoPlay
           loop
           muted
@@ -74,8 +72,8 @@ export const Hero: React.FC = () => {
         {/* Mobile Portrait Video (9:16 / 720x1280 story.mp4) */}
         <video
           ref={mobileVideoRef}
-          src="/story.mp4"
-          poster="/images/hero-poster-mobile.jpg"
+          src={hero.mobileVideo}
+          poster={hero.mobilePoster || undefined}
           autoPlay
           loop
           muted
@@ -104,11 +102,11 @@ export const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
           >
-            {HERO_EYEBROW}
+            {hero.eyebrow}
           </motion.span>
 
-          <h1 className="hero-title" aria-label={HERO_TITLE}>
-            {Array.from(HERO_TITLE).map((ch, i) => (
+          <h1 className="hero-title" aria-label={hero.title}>
+            {Array.from(hero.title).map((ch, i) => (
               <motion.span
                 key={i}
                 aria-hidden="true"
@@ -125,14 +123,14 @@ export const Hero: React.FC = () => {
 
         <motion.div className="hero-cta-wrap" style={{ opacity: isMounted ? textOpacity : 1 }}>
           <motion.a
-            href="/collections/new-designs"
+            href={hero.ctaHref}
             id="hero-shop-now-btn"
             className="hero-cta-btn"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.0, ease: EASE }}
           >
-            <span>{HERO_CTA}</span>
+            <span>{hero.ctaText}</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

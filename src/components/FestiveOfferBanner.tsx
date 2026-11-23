@@ -2,27 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useSiteContent } from "@/lib/site-content/context";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
-
-const offers = [
-  {
-    seal: ["Pay", "₹5,000"],
-    title: "Get Power Lift Recliner",
-    worth: "₹35,000",
-    note: "*On purchase of ₹1,50,000",
-    image: { src: "/images/catalogue-recliner-featured.jpg", alt: "Power lift recliner" },
-  },
-  {
-    seal: ["Get", "Free"],
-    title: "Marble Coffee Table",
-    worth: "₹6,500",
-    note: "*On purchase of ₹1,00,000",
-    image: { src: "/images/plinth-table.jpg", alt: "Marble coffee table" },
-  },
-];
-
-const perks = ["Free Delivery", "Free Installation", "Easy EMI"];
 
 const Diya = () => (
   <svg viewBox="0 0 64 48" aria-hidden="true">
@@ -33,7 +15,10 @@ const Diya = () => (
   </svg>
 );
 
-export const FestiveOfferBanner: React.FC = () => (
+// Text, offers and photos are edited in Admin → Homepage sections → Festive offer
+export const FestiveOfferBanner: React.FC = () => {
+  const { festiveOffer: f } = useSiteContent();
+  return (
   <section className="fob" aria-labelledby="fob-heading">
     <motion.div
       className="fob-brand"
@@ -42,9 +27,9 @@ export const FestiveOfferBanner: React.FC = () => (
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.9, ease: EASE }}
     >
-      <span className="fob-celebrating">Celebrating</span>
-      <h2 id="fob-heading">Diwali</h2>
-      <span className="fob-sale">Festive Sale</span>
+      <span className="fob-celebrating">{f.eyebrow}</span>
+      <h2 id="fob-heading">{f.heading}</h2>
+      <span className="fob-sale">{f.saleLabel}</span>
       <span className="fob-diyas">
         <Diya />
         <Diya />
@@ -54,12 +39,12 @@ export const FestiveOfferBanner: React.FC = () => (
 
     <div className="fob-offers">
       <p className="fob-tagline">
-        Deals that shine <strong>brighter than the diyas!</strong>
+        {f.tagline} <strong>{f.taglineBold}</strong>
       </p>
       <div className="fob-panel">
-        {offers.map((o, i) => (
+        {f.offers.map((o, i) => (
           <motion.article
-            key={o.title}
+            key={i}
             className="fob-offer"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -68,8 +53,8 @@ export const FestiveOfferBanner: React.FC = () => (
           >
             <div className="fob-offer-text">
               <span className="fob-seal">
-                <b>{o.seal[0]}</b>
-                <small>{o.seal[1]}</small>
+                <b>{o.sealTop}</b>
+                <small>{o.sealBottom}</small>
               </span>
               <span className="fob-offer-title">{o.title}</span>
               <span className="fob-worth">
@@ -88,18 +73,19 @@ export const FestiveOfferBanner: React.FC = () => (
 
     <div className="fob-media">
       <Image
-        src="/images/mf-fluted-luxury-lounge.jpg"
-        alt="Luxury lounge seating"
+        src={f.image.src}
+        alt={f.image.alt}
         fill
         sizes="(max-width: 1060px) 100vw, 28vw"
         style={{ objectFit: "cover" }}
       />
       <ul className="fob-perks">
-        {perks.map((p) => (
-          <li key={p}>{p}</li>
+        {f.perks.map((p, i) => (
+          <li key={i}>{p}</li>
         ))}
       </ul>
-      <span className="fob-tnc">*T&amp;C Apply</span>
+      <span className="fob-tnc">{f.terms}</span>
     </div>
   </section>
-);
+  );
+};

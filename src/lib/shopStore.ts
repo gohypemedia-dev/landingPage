@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { CartItem, Product, ProductFinish } from "@/types";
-import { PRODUCTS } from "@/data/products";
+import { useCatalog } from "@/lib/catalog/context";
 
 // Shortlist + inquiry list shared by every page and saved in the browser (localStorage),
 // so hearts and added items carry over between pages and visits.
@@ -89,12 +89,14 @@ export const shopActions = {
   },
 };
 
-// Cache resolved CartItems per saved snapshot so React gets a stable array
+// Cache resolved CartItems per saved snapshot (and product list) so React gets a stable array
 let lastItemsRef: Saved["items"] | null = null;
+let lastProductsRef: Product[] | null = null;
 let lastResolved: CartItem[] = [];
-const resolveItems = (items: Saved["items"]): CartItem[] => {
-  if (items === lastItemsRef) return lastResolved;
+const resolveItems = (items: Saved["items"], PRODUCTS: Product[]): CartItem[] => {
+  if (items === lastItemsRef && PRODUCTS === lastProductsRef) return lastResolved;
   lastItemsRef = items;
+  lastProductsRef = PRODUCTS;
   lastResolved = items.flatMap((it) => {
     const product = PRODUCTS.find((p) => p.id === it.productId);
     if (!product) return [];
@@ -106,5 +108,6 @@ const resolveItems = (items: Saved["items"]): CartItem[] => {
 
 export const useShopStore = () => {
   const s = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  return { wishlistIds: s.wishlist, items: resolveItems(s.items) };
+  const { products } = useCatalog();
+  return { wishlistIds: s.wishlist, items: resolveItems(s.items, products) };
 };

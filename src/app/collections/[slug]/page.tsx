@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { COLLECTIONS, getCollectionProducts } from "@/data/collections";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
+import { getCatalog } from "@/lib/server/catalog";
 
 export function generateStaticParams() {
   return COLLECTIONS.map((c) => ({ slug: c.slug }));
@@ -39,7 +40,7 @@ async function CollectionContent({ params }: { params: Promise<{ slug: string }>
       subheading={collection.title}
       introduction={collection.intro}
       categoryTiles={[]}
-      products={getCollectionProducts(collection.key)}
+      products={getCollectionProducts((await getCatalog()).products, collection.key)}
       heroImage={collection.hero}
     />
   );

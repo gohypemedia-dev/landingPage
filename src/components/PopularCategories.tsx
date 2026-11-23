@@ -3,14 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { SHOP_CATEGORIES } from "@/data/categories";
+import { useSiteContent } from "@/lib/site-content/context";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-// Same list as the Shop menu; each circle opens its own category page
-const categories = SHOP_CATEGORIES.filter((c) => c.inCircles !== false);
-
-export const PopularCategories: React.FC = () => (
+// Circles are edited in Admin → Homepage sections → Popular categories
+// (defaults: the Shop menu list from src/data/categories.ts)
+export const PopularCategories: React.FC = () => {
+  const { popularCategories } = useSiteContent();
+  return (
   <section className="pc-section" aria-labelledby="pc-heading">
     <motion.h2
       id="pc-heading"
@@ -20,13 +21,13 @@ export const PopularCategories: React.FC = () => (
       viewport={{ once: true, amount: 0.8 }}
       transition={{ duration: 0.8, ease: EASE }}
     >
-      Popular Categories
+      {popularCategories.heading}
     </motion.h2>
 
     <ul className="pc-grid">
-      {categories.map((c, i) => (
+      {popularCategories.items.map((c, i) => (
         <motion.li
-          key={c.label}
+          key={i}
           initial={{ opacity: 0, y: 28, scale: 0.94 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -42,4 +43,5 @@ export const PopularCategories: React.FC = () => (
       ))}
     </ul>
   </section>
-);
+  );
+};

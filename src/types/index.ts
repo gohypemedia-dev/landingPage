@@ -28,6 +28,8 @@ export interface Product {
   name: string;
   subtitle: string;
   category: "sofas" | "recliners" | "beds" | "dining" | "curtains" | "furniture" | "lighting" | "objects";
+  /** Slugs of the shop categories this product is listed under (set by the catalog). */
+  categories?: string[];
   priceUSD: number;
   priceINR?: number;
   priceOnEnquiry?: boolean;

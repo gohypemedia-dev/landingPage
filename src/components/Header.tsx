@@ -6,7 +6,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CurrencyCode } from "@/types";
 import { getCollectionProducts } from "@/data/collections";
-import { ROOMS, SHOP_CATEGORIES, getCategoryProducts } from "@/data/categories";
+import { ROOMS } from "@/data/categories";
+import { useCatalog } from "@/lib/catalog/context";
+import { categoryProducts } from "@/lib/catalog/queries";
 import { SHOWROOM_INFO, formatPriceINR, getWhatsAppEnquiryUrl, getShowroomBookingWhatsAppUrl } from "@/data/products";
 import { BrandLogo } from "@/components/BrandLogo";
 
@@ -74,19 +76,20 @@ export const Header: React.FC<HeaderProps> = ({
 
   const designs = (n: number) => (n ? `${n} ${n === 1 ? "Design" : "Designs"}` : "Enquire");
 
-  // Same categories as the Popular Categories circles; counts come from the live product list
-  const shopCategories = SHOP_CATEGORIES.map((c) => ({
+  // Categories and counts come from Admin → Products / Categories
+  const catalog = useCatalog();
+  const shopCategories = catalog.categories.map((c) => ({
     label: c.label,
     href: c.href,
     image: c.image,
     room: c.room,
-    count: designs(getCategoryProducts(c.slug).length),
+    count: designs(categoryProducts(catalog, c.slug).length),
   }));
 
   // International Collection dropdown previews its pieces, then links to the full collection
   const internationalHref = "/collections/international-collection";
   const internationalItems = [
-    ...getCollectionProducts("international").map((p) => ({
+    ...getCollectionProducts(catalog.products, "international").map((p) => ({
       label: p.name,
       href: `/product/${p.id}`,
       image: p.primaryImage,

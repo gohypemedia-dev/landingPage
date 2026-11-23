@@ -6,10 +6,10 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import { CurrencyCode, Product } from "@/types";
 import {
   LOOKBOOK_ROOMS,
-  PRODUCTS,
   formatPriceWithCurrency,
   getWhatsAppEnquiryUrl,
 } from "@/data/products";
+import { useCatalog } from "@/lib/catalog/context";
 
 interface LookbookHotspotProps {
   currency: CurrencyCode;
@@ -48,6 +48,7 @@ function useMediaQuery(query: string): boolean {
 }
 
 export const LookbookHotspot: React.FC<LookbookHotspotProps> = ({ currency, onQuickView }) => {
+  const { products: PRODUCTS } = useCatalog();
   const rooms = LOOKBOOK_ROOMS;
   const total = rooms.length;
   const [active, setActive] = useState(0);

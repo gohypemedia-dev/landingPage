@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { CurrencyCode, Product } from "@/types";
-import { PRODUCTS, formatPriceWithCurrency } from "@/data/products";
+import { formatPriceWithCurrency } from "@/data/products";
+import { useCatalog } from "@/lib/catalog/context";
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onSelectProduct,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { products: PRODUCTS } = useCatalog();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,7 +43,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         p.designer.toLowerCase().includes(q) ||
         p.materials.toLowerCase().includes(q)
     );
-  }, [searchTerm]);
+  }, [searchTerm, PRODUCTS]);
 
   if (!isOpen) return null;
 

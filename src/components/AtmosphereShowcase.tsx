@@ -5,7 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { CurrencyCode, Product, ProductFinish } from "@/types";
-import { PRODUCTS, formatPriceWithCurrency } from "@/data/products";
+import { formatPriceWithCurrency } from "@/data/products";
+import { useCatalog } from "@/lib/catalog/context";
+import { useSiteContent } from "@/lib/site-content/context";
 
 interface AtmosphereShowcaseProps {
   currency: CurrencyCode;
@@ -302,98 +304,48 @@ const AtmosphereBanner: React.FC<{
 
 // Ids first (in order), then anything else to fill the column; a product whose
 // photo is the banner photo itself is skipped so it never repeats on the page.
-const pick = (ids: string[], bannerImage: string, count = 6): Product[] => {
+const pick = (products: Product[], ids: string[], bannerImage: string, count = 6): Product[] => {
   const out: Product[] = [];
   const add = (p?: Product) => {
     if (p && p.primaryImage !== bannerImage && !out.some((x) => x.id === p.id)) out.push(p);
   };
-  ids.forEach((id) => add(PRODUCTS.find((p) => p.id === id)));
-  PRODUCTS.forEach((p) => out.length < count && add(p));
+  ids.forEach((id) => add(products.find((p) => p.id === id)));
+  products.forEach((p) => out.length < count && add(p));
   return out;
 };
 
 export const AtmosphereShowcase: React.FC<AtmosphereShowcaseProps> = ({ currency, onQuickView, children }) => {
-  const livingImage = "/images/banner-living.jpg";
-  const bedroomImage = "/images/bedroom-space.jpg";
-  const officeImage = "/images/dining-space.jpg";
-  const diningImage = "/images/lookbook.jpg";
+  // Banners are edited in Admin → Homepage sections → Room banners.
+  // Sides alternate (title left, then right) so the layout keeps its rhythm.
+  const { atmosphere } = useSiteContent();
+  const { products: allProducts } = useCatalog();
+  const banners: BannerData[] = atmosphere.banners.map((b, i) => ({
+    id: `banner-${i}`,
+    index: String(i + 1).padStart(2, "0"),
+    title: b.title,
+    desc: b.description,
+    href: b.href,
+    linkText: b.linkText,
+    image: b.image.src,
+    alt: b.image.alt,
+    objectPosition: b.objectPosition || "center",
+    bg: b.background || "#6B5B4A",
+    side: i % 2 === 0 ? "left" : "right",
+    products: pick(allProducts, b.productIds, b.image.src),
+  }));
 
-  const banners: BannerData[] = [
-    {
-      id: "living",
-      index: "01",
-      title: "Living.",
-      desc: "Handcrafted modular seating, German motorized recliners, and curved statement loungers.",
-      href: "/sofas-kurnool",
-      linkText: "Shop Living",
-      image: livingImage,
-      alt: "Living Atmosphere Mallikarjuna Furniture World",
-      objectPosition: "center 55%",
-      bg: "#85705C",
-      side: "left",
-      products: pick(
-        [
-          "contemporary-comfort-sofa",
-          "cloudcomfort-motorized-recliner",
-          "aurelia-wave-sofa",
-          "royal-navy-tufted-suite",
-          "penthouse-modular-sectional",
-          "elysian-grand-living-suite",
-        ],
-        livingImage
-      ),
-    },
-    {
-      id: "bedroom",
-      index: "02",
-      title: "Bedroom.",
-      desc: "Solid Burma teakwood king cots with German gas-lift hydraulic storage and custom headboards.",
-      href: "/beds-cots-kurnool",
-      linkText: "Shop Bedroom",
-      image: bedroomImage,
-      alt: "Bedroom Atmosphere Mallikarjuna Furniture World",
-      objectPosition: "center 60%",
-      bg: "#9E8B76",
-      side: "right",
-      products: pick(["serenity-tufted-king-bed", "bespoke-motorized-curtains", "heritage-teakwood-king-cot"], bedroomImage),
-    },
-    {
-      id: "office",
-      index: "03",
-      title: "Office.",
-      desc: "Statement lounge seating and stone-top tables for studies, home offices and executive suites.",
-      href: "/furniture",
-      linkText: "Shop Office",
-      image: officeImage,
-      alt: "Office Atmosphere Mallikarjuna Furniture World",
-      objectPosition: "center 55%",
-      bg: "#524535",
-      side: "left",
-      products: pick(["cloudcomfort-motorized-recliner", "plinth-natural-stone-table", "contemporary-comfort-sofa"], officeImage),
-    },
-    {
-      id: "dining",
-      index: "04",
-      title: "Dining.",
-      desc: "Monolithic Italian marble and solid teak dining tables with sculptural ergonomic chairs.",
-      href: "/dining-tables-kurnool",
-      linkText: "Shop Dining",
-      image: diningImage,
-      alt: "Dining Atmosphere Mallikarjuna Furniture World",
-      objectPosition: "center 60%",
-      bg: "#86745F",
-      side: "right",
-      products: pick(["italian-marble-dining-table", "plinth-natural-stone-table", "penthouse-modular-sectional"], diningImage),
-    },
-  ];
+  // The optional children (Inspiration carousel) sit after the second banner.
+  const split = Math.min(2, banners.length);
 
   return (
     <div id="atmosphere-showcases" className="atm-wrap">
-      <AtmosphereBanner data={banners[0]} currency={currency} onQuickView={onQuickView} />
-      <AtmosphereBanner data={banners[1]} currency={currency} onQuickView={onQuickView} />
+      {banners.slice(0, split).map((b) => (
+        <AtmosphereBanner key={b.id} data={b} currency={currency} onQuickView={onQuickView} />
+      ))}
       {children}
-      <AtmosphereBanner data={banners[2]} currency={currency} onQuickView={onQuickView} />
-      <AtmosphereBanner data={banners[3]} currency={currency} onQuickView={onQuickView} />
+      {banners.slice(split).map((b) => (
+        <AtmosphereBanner key={b.id} data={b} currency={currency} onQuickView={onQuickView} />
+      ))}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
-import { PRODUCTS } from "@/data/products";
+import { getCatalog } from "@/lib/server/catalog";
 
 export const metadata: Metadata = {
   title: "New Arrivals | All Furniture in Kurnool — Mallikarjuna Furniture World",
@@ -9,8 +9,9 @@ export const metadata: Metadata = {
 };
 
 // "New Arrivals" in the navbar: every product, newest first
-export default function AllFurniturePage() {
-  const newestFirst = [...PRODUCTS].sort((a, b) => b.year - a.year);
+export default async function AllFurniturePage() {
+  const { products } = await getCatalog();
+  const newestFirst = [...products].sort((a, b) => b.year - a.year);
 
   return (
     <CategoryLandingTemplate

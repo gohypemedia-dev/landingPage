@@ -1,26 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { PRODUCTS, REVIEWS } from "@/data/products";
-// Placeholder reviews — replace with genuine ones before launch (see src/data/sampleReviews.ts)
-import { SAMPLE_REVIEWS } from "@/data/sampleReviews";
-
-const SAMPLE_PRODUCT_IDS = [
-  "aurelia-wave-sofa",
-  "cloudcomfort-motorized-recliner",
-  "serenity-tufted-king-bed",
-  "italian-marble-dining-table",
-  "bespoke-motorized-curtains",
-];
-
-const testimonials = [
-  ...REVIEWS.map((r) => ({ id: r.id, author: r.author, product: r.productName, rating: r.rating, comment: r.comment })),
-  ...SAMPLE_PRODUCT_IDS.flatMap((id) => {
-    const review = SAMPLE_REVIEWS[id]?.[0];
-    const product = PRODUCTS.find((p) => p.id === id);
-    return review && product ? [{ id: review.id, author: review.author, product: product.name, rating: review.rating, comment: review.comment }] : [];
-  }),
-];
+import { useSiteContent } from "@/lib/site-content/context";
 
 const initials = (name: string) =>
   name
@@ -31,7 +12,9 @@ const initials = (name: string) =>
     .map((w) => w[0].toUpperCase())
     .join("");
 
+// Reviews are edited in Admin → Homepage sections → Testimonials
 export const Testimonials: React.FC = () => {
+  const { testimonials } = useSiteContent();
   const trackRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: number) => {
@@ -43,7 +26,7 @@ export const Testimonials: React.FC = () => {
   return (
     <section className="tm" aria-labelledby="tm-heading">
       <h2 id="tm-heading" className="tm-heading">
-        What Our Customers Say
+        {testimonials.heading}
       </h2>
 
       <div className="tm-wrap">
@@ -54,8 +37,8 @@ export const Testimonials: React.FC = () => {
         </button>
 
         <div ref={trackRef} className="tm-track" data-lenis-prevent-horizontal>
-          {testimonials.map((t) => (
-            <article key={t.id} className="tm-card">
+          {testimonials.items.map((t, i) => (
+            <article key={i} className="tm-card">
               <span className="tm-avatar" aria-hidden="true">
                 {initials(t.author)}
               </span>

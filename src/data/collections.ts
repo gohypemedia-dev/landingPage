@@ -1,5 +1,4 @@
 import { Product } from "@/types";
-import { PRODUCTS } from "@/data/products";
 
 export type CollectionKey = "new" | "bestsellers" | "exclusive" | "international";
 
@@ -54,12 +53,13 @@ const INTERNATIONAL_IDS = [
 // Showcase pieces lead the "New Designs" collection
 const STAGE_IDS = ["eave-modular-sofa", "echasse-smoked-vase", "hashira-ambient-column-lamp"];
 
-export const getCollectionProducts = (key: CollectionKey): Product[] => {
-  const stage = STAGE_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter((p): p is Product => !!p);
-  const rest = PRODUCTS.filter((p) => !STAGE_IDS.includes(p.id));
-  if (key === "international") return INTERNATIONAL_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter((p): p is Product => !!p);
-  if (key === "bestsellers") return [...PRODUCTS].sort((a, b) => b.reviewCount - a.reviewCount);
-  if (key === "exclusive") return [...PRODUCTS].sort((a, b) => (a.priceINR ?? a.priceUSD) - (b.priceINR ?? b.priceUSD)).slice(0, 8);
+/** A collection drawn from the live product list (useCatalog().products or getCatalog().products). */
+export const getCollectionProducts = (products: Product[], key: CollectionKey): Product[] => {
+  const stage = STAGE_IDS.map((id) => products.find((p) => p.id === id)).filter((p): p is Product => !!p);
+  const rest = products.filter((p) => !STAGE_IDS.includes(p.id));
+  if (key === "international") return INTERNATIONAL_IDS.map((id) => products.find((p) => p.id === id)).filter((p): p is Product => !!p);
+  if (key === "bestsellers") return [...products].sort((a, b) => b.reviewCount - a.reviewCount);
+  if (key === "exclusive") return [...products].sort((a, b) => (a.priceINR ?? a.priceUSD) - (b.priceINR ?? b.priceUSD)).slice(0, 8);
   return [...stage, ...rest.sort((a, b) => b.year - a.year)];
 };
 
