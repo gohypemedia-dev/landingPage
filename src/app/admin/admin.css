@@ -419,6 +419,15 @@ a.adm-stat:hover { border-color: var(--adm-border-strong); }
 .adm-login-card--wide { width: min(560px, 100%); }
 .adm-login-card > p { margin: 0.35rem 0 1.5rem; }
 .adm-login-form { display: flex; flex-direction: column; gap: 1rem; }
+.adm-password { position: relative; }
+.adm-root .adm-password input { padding-right: 2.75rem; }
+.adm-password-toggle {
+  position: absolute; top: 50%; right: 0.35rem; transform: translateY(-50%);
+  display: grid; place-items: center; width: 2.1rem; height: 2.1rem;
+  border: 0; border-radius: 6px; background: none; color: var(--adm-muted); cursor: pointer;
+}
+.adm-password-toggle:hover { color: var(--adm-text); background: var(--adm-bg); }
+.adm-password-toggle:focus-visible { outline: 2px solid var(--adm-gold); outline-offset: 1px; }
 .adm-steps { display: flex; flex-direction: column; gap: 0.6rem; padding-left: 1.2rem; }
 
 /* ── Products & categories ─────────────────────────────────────────────── */

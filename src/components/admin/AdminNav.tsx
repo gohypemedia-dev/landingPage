@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
 import { sectionHome } from "@/lib/site-content/schema";
@@ -27,7 +27,6 @@ export function AdminNav({
   loginSkipped: boolean;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
 
   // A section editor (/admin/content/<key>) highlights the menu item it is managed from.
   const section = pathname.match(/^\/admin\/content\/([^/]+)/)?.[1];
@@ -74,8 +73,8 @@ export function AdminNav({
             className="adm-btn adm-btn--small adm-btn--ghost"
             onClick={async () => {
               await authClient.signOut();
-              router.replace("/admin/login");
-              router.refresh();
+              // Full page load so no signed-in admin pages stay in the browser's router cache.
+              window.location.replace("/admin/login");
             }}
           >
             Sign out

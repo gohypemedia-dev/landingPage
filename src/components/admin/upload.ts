@@ -20,10 +20,15 @@ export async function uploadMedia(file: File): Promise<MediaItem> {
   const target = await presign.json().catch(() => ({}));
   if (!presign.ok) throw new Error(target.error ?? "Could not start the upload.");
 
+  // A CORS rejection surfaces as a TypeError ("Failed to fetch") with no response to inspect.
   const put = await fetch(target.uploadUrl, {
     method: "PUT",
     headers: { "Content-Type": file.type },
     body: file,
+  }).catch(() => {
+    throw new Error(
+      `Upload blocked by the browser. Check the R2 bucket's CORS policy allows PUT from ${window.location.origin}.`,
+    );
   });
   if (!put.ok) {
     throw new Error(
