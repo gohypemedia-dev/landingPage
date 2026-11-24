@@ -20,6 +20,39 @@ type Path = (string | number)[];
 const typeOf = (s: AnySchema) => (s as unknown as { def: { type: string } }).def.type;
 const metaOf = (s: AnySchema): FieldMeta => ((s as unknown as { meta: () => FieldMeta | undefined }).meta() ?? {});
 
+/**
+ * Keeps the typed text separately from the stored number, so the box can be
+ * empty while editing (an empty box still saves as 0) instead of snapping
+ * back to "0" and leaving the next keystrokes after it.
+ */
+function NumberInput({
+  value,
+  onChange,
+  ...props
+}: { id: string; min?: number; max?: number; value: number; onChange: (n: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+  // Follow outside changes (e.g. Discard) without fighting what the user is typing.
+  const draftNumber = draft.trim() === "" ? 0 : Number(draft);
+  if (draftNumber !== value) setDraft(String(value));
+
+  return (
+    <input
+      {...props}
+      type="number"
+      inputMode="numeric"
+      value={draft}
+      onChange={(e) => {
+        const text = e.target.value;
+        const n = text.trim() === "" ? 0 : Number(text);
+        if (!Number.isFinite(n)) return;
+        setDraft(text);
+        onChange(n);
+      }}
+      onBlur={() => draft.trim() !== "" && setDraft(String(value))}
+    />
+  );
+}
+
 function unwrap(s: AnySchema): AnySchema {
   let cur = s;
   while (["optional", "default", "nullable"].includes(typeOf(cur))) {
@@ -165,13 +198,12 @@ function Field({ schema, value, path, label, onChange }: FieldProps) {
     return (
       <div className="adm-field">
         <label htmlFor={id}>{title}</label>
-        <input
+        <NumberInput
           id={id}
-          type="number"
           min={minValue ?? undefined}
           max={maxValue ?? undefined}
-          value={typeof value === "number" ? value : ""}
-          onChange={(e) => onChange(path, e.target.value === "" ? 0 : Number(e.target.value))}
+          value={typeof value === "number" ? value : 0}
+          onChange={(n) => onChange(path, n)}
         />
         {meta.help && <small>{meta.help}</small>}
       </div>
