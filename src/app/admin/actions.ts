@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, updateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 import { z } from "zod";
 
 import { categorySchema, productSchema, slugify } from "@/lib/catalog/schema";
@@ -39,6 +39,17 @@ function issueMessage(error: z.ZodError) {
 
 // ── Website content ─────────────────────────────────────────────────────────
 
+function siteContentChanged() {
+  try {
+    updateTag(SITE_CONTENT_TAG);
+  } catch {}
+  try {
+    revalidateTag(SITE_CONTENT_TAG, "default");
+  } catch {}
+  revalidatePath("/", "layout");
+  revalidatePath("/admin", "layout");
+}
+
 export async function saveSectionAction(key: unknown, value: unknown): Promise<ActionResult> {
   if (!isSiteContentKey(key)) return { ok: false, message: "Unknown section." };
   const parsed = siteContentSchemas[key].safeParse(value);
@@ -47,7 +58,7 @@ export async function saveSectionAction(key: unknown, value: unknown): Promise<A
   try {
     const user = await assertAdmin();
     await saveSection(key, parsed.data as SiteContent[typeof key], user.id);
-    updateTag(SITE_CONTENT_TAG);
+    siteContentChanged();
     return { ok: true };
   } catch (error) {
     return failure(error, "The section could not be saved. Try again.");
@@ -65,8 +76,7 @@ export async function setSectionEnabledAction(key: unknown, enabled: unknown): P
     const parsed = siteContentSchemas[key].safeParse({ ...current, enabled });
     if (!parsed.success) return { ok: false, message: issueMessage(parsed.error) };
     await saveSection(key, parsed.data as SiteContent[typeof key], user.id);
-    updateTag(SITE_CONTENT_TAG);
-    revalidatePath("/admin", "layout");
+    siteContentChanged();
     return { ok: true };
   } catch (error) {
     return failure(error, "The section could not be updated. Try again.");
@@ -78,7 +88,7 @@ export async function resetSectionAction(key: unknown): Promise<ActionResult> {
   try {
     await assertAdmin();
     await resetSection(key);
-    updateTag(SITE_CONTENT_TAG);
+    siteContentChanged();
     return { ok: true };
   } catch (error) {
     return failure(error, "The section could not be reset. Try again.");
@@ -98,8 +108,20 @@ function withSlug(value: unknown, slugKey: "id" | "slug", nameKey: "name" | "lab
 const originalKey = (v: unknown) => (typeof v === "string" && v ? v : null);
 
 function catalogChanged() {
-  updateTag(CATALOG_TAG);
+  try {
+    updateTag(CATALOG_TAG);
+  } catch {}
+  try {
+    revalidateTag(CATALOG_TAG, "default");
+  } catch {}
+  revalidatePath("/", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/sofas-kurnool", "page");
+  revalidatePath("/recliners-kurnool", "page");
+  revalidatePath("/beds-cots-kurnool", "page");
+  revalidatePath("/dining-tables-kurnool", "page");
+  revalidatePath("/curtains-blinds-kurnool", "page");
+  revalidatePath("/furniture", "page");
 }
 
 export async function saveProductAction(originalId: unknown, value: unknown): Promise<ActionResult<{ id: string }>> {

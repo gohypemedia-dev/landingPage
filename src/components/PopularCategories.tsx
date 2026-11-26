@@ -34,10 +34,16 @@ export const PopularCategories: React.FC = () => {
 
     <ul className="pc-grid">
       {popularCategories.items.map((c, i) => {
-        const defaultImage = defaultImageByHref.get(c.href);
-        const catalogImage = categoryImageByHref.get(c.href);
-        const imageSrc =
-          catalogImage && (!defaultImage || c.image === defaultImage) ? catalogImage : c.image;
+        const cat = catalog.categories.find(
+          (k) =>
+            k.href === c.href ||
+            k.slug === c.href.replace(/^\//, "").replace(/-kurnool$/, "") ||
+            k.label.toLowerCase() === c.label.toLowerCase()
+        );
+        const imageSrc = cat?.image || c.image;
+        const label = cat?.label || c.label;
+        const href = cat?.href || c.href;
+
         return (
         <motion.li
           key={i}
@@ -46,11 +52,11 @@ export const PopularCategories: React.FC = () => {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: i * 0.07, ease: EASE }}
         >
-          <Link href={c.href} className="pc-item">
+          <Link href={href} className="pc-item">
             <span className="pc-circle">
-              <Image src={imageSrc} alt={c.label} fill sizes="(max-width: 640px) 30vw, 200px" style={{ objectFit: "cover" }} />
+              <Image src={imageSrc} alt={label} fill sizes="(max-width: 640px) 30vw, 200px" style={{ objectFit: "cover" }} />
             </span>
-            <span className="pc-label">{c.label}</span>
+            <span className="pc-label">{label}</span>
           </Link>
         </motion.li>
         );

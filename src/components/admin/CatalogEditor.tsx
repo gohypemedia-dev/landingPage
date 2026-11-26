@@ -14,6 +14,7 @@ import {
 } from "@/app/admin/actions";
 import { SchemaForm } from "@/components/admin/SchemaForm";
 import { categorySchema, productSchema, type CategoryInput, type ProductInput } from "@/lib/catalog/schema";
+import type { Product } from "@/types";
 
 type Props =
   | {
@@ -31,6 +32,7 @@ type Props =
       originalKey: string | null;
       initial: CategoryInput;
       productCount: number;
+      products?: Product[];
       updatedAt?: string;
       /** Where "View on site" opens (defaults to the record's own page). */
       viewHref?: string;
@@ -205,6 +207,67 @@ export function CatalogEditor(props: Props) {
           </div>
         </details>
       ))}
+
+      {kind === "category" && props.products && props.products.length > 0 && (
+        <details className="adm-fold" open>
+          <summary>
+            <span>
+              <strong>Products in this category ({props.products.length})</strong>
+              <small>Click “Edit” on any product to update its photo, name, price, description or details</small>
+            </span>
+          </summary>
+          <div className="adm-fold-body">
+            <div className="adm-table-wrap">
+              <table className="adm-table">
+                <thead>
+                  <tr>
+                    <th aria-label="Photo" style={{ width: "48px" }} />
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th aria-label="Actions" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {props.products.map((p) => (
+                    <tr key={p.id}>
+                      <td>
+                        <img src={p.primaryImage} alt="" className="adm-thumb" />
+                      </td>
+                      <td>
+                        <Link href={`/admin/products/${p.id}`}>
+                          <strong>{p.name}</strong>
+                        </Link>
+                        <br />
+                        <small className="adm-muted">{p.subtitle || p.id}</small>
+                      </td>
+                      <td>
+                        {p.priceOnEnquiry ? (
+                          <span className="adm-muted">On enquiry</span>
+                        ) : (
+                          new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(p.priceINR ?? Math.round(p.priceUSD * 83.5))
+                        )}
+                      </td>
+                      <td>
+                        <span className={`adm-badge ${p.inStock ? "adm-badge--ok" : "adm-badge--warn"}`}>
+                          {p.inStock ? "In stock" : "Out of stock"}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="adm-row">
+                          <Link href={`/admin/products/${p.id}`} className="adm-btn adm-btn--small">
+                            Edit
+                          </Link>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      )}
     </div>
   );
 }

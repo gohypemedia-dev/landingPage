@@ -111,6 +111,7 @@ const ProductDetailBody: React.FC<{
   const moreToExplore = useMemo(() => {
     const base = related.length >= 2 ? related : PRODUCTS.filter((p) => p.id !== product.id && p.featured);
     return base.map((p) => {
+      if (p.primaryImage) return p;
       const similarImage = SIMILAR_PRODUCT_IMAGES[p.id] ?? SIMILAR_CATEGORY_IMAGES[p.category];
       if (!similarImage) return p;
       return {

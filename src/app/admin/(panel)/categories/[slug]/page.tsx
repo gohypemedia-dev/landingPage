@@ -26,13 +26,16 @@ export default async function CategoryEditorPage({ params }: Props) {
   const category = catalog.categories.find((c) => c.slug === slug);
   if (!category) notFound();
 
+  const prods = categoryProducts(catalog, slug);
+
   return (
     <CatalogEditor
       key={slug}
       kind="category"
       originalKey={slug}
       initial={toCategoryInput(category)}
-      productCount={categoryProducts(catalog, slug).length}
+      productCount={prods.length}
+      products={prods}
       updatedAt={updatedAt[`category:${slug}`]}
       viewHref={category.href}
     />

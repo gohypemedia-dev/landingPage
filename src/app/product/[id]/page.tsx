@@ -8,6 +8,7 @@ import { getCatalog } from "@/lib/server/catalog";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 
 // Prerenders every product; ones added later in the admin render on first visit.
+export const dynamicParams = true;
 export async function generateStaticParams() {
   const { products } = await getCatalog();
   return products.map((p) => ({ id: p.id }));

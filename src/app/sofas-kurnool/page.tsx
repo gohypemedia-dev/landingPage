@@ -38,8 +38,6 @@ export default function SofasKurnoolPage() {
       filterCategoryKey="sofas"
       categoryTiles={sofaTiles}
       seoFaqs={faqs}
-      heroImage="/images/mf-signature-curved-living.jpg"
-      productImageOverride="/images/mf-fluted-luxury-lounge.jpg"
     />
   );
 }

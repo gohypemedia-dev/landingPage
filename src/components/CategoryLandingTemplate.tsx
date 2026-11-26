@@ -69,9 +69,6 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
   const [sort, setSort] = useState("featured");
   const [inStockOnly, setInStockOnly] = useState(false);
 
-  // Some pages are already named "All …" (e.g. "All Furniture"), so don't prefix it again
-  const baseName = categoryName.replace(/^All\s+/i, "");
-
   const catalog = useCatalog();
   const catalogCategory = useMemo(
     () =>
@@ -79,13 +76,17 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
         (c) =>
           (filterCategoryKey && c.slug === filterCategoryKey) ||
           c.href === `/${categorySlug}` ||
-          c.slug === categorySlug,
+          c.slug === categorySlug ||
+          (categorySlug && c.href === categorySlug),
       ),
     [catalog.categories, filterCategoryKey, categorySlug],
   );
+
+  const displayCategoryName = catalogCategory?.label || categoryName;
+  const baseName = displayCategoryName.replace(/^All\s+/i, "");
   const heroImage =
-    heroOverride ||
     catalogCategory?.image ||
+    heroOverride ||
     (filterCategoryKey && HERO_IMAGES[filterCategoryKey]) ||
     DEFAULT_HERO;
   const categoryProducts = useMemo(
@@ -113,15 +114,15 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
           <nav aria-label="Breadcrumb" className="shop-crumbs">
             <Link href="/">Home</Link>
             <span aria-hidden="true">/</span>
-            <span>{categoryName}</span>
+            <span>{displayCategoryName}</span>
           </nav>
 
           {/* Hero banner */}
           <section className="cl-hero">
             <div className="cl-hero-inner">
-              <Image src={heroImage} alt={categoryName} fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+              <Image src={heroImage} alt={displayCategoryName} fill priority sizes="100vw" style={{ objectFit: "cover" }} />
               {/* Banner is image-only; the title stays for search engines and screen readers */}
-              <h1 className="sr-only">{categoryName}</h1>
+              <h1 className="sr-only">{displayCategoryName}</h1>
             </div>
           </section>
 
@@ -185,7 +186,7 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
               {gridProducts.length > 0 ? (
                 <div className="cl-grid">
                   {gridProducts.map((p) => {
-                    const cardProduct = productImageOverride
+                    const cardProduct = (productImageOverride && !p.primaryImage)
                       ? {
                         ...p,
                         primaryImage: productImageOverride,

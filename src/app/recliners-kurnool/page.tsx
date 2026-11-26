@@ -40,7 +40,6 @@ export default function ReclinersKurnoolPage() {
       filterCategoryKey="recliners"
       categoryTiles={reclinerTiles}
       seoFaqs={faqs}
-      productImageOverride="/images/recliners-kurnool-product.jpg"
     />
   );
 }
