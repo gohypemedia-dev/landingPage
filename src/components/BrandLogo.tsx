@@ -13,10 +13,10 @@ interface BrandLogoProps {
 }
 
 // Both files share the same intrinsic size (transparent background)
-const LOGO_SRC_LIGHT_SURFACE = "/images/mallikarjuna-logo.png";
-const LOGO_SRC_DARK_SURFACE = "/images/mallikarjuna-logo-light.png";
-const LOGO_WIDTH = 1384;
-const LOGO_HEIGHT = 359;
+const LOGO_SRC_LIGHT_SURFACE = "/images/mallikarjuna-new-logo.png";
+const LOGO_SRC_DARK_SURFACE = "/images/mallikarjuna-new-logo-light.png";
+const LOGO_WIDTH = 963;
+const LOGO_HEIGHT = 212;
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = "",

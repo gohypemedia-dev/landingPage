@@ -345,7 +345,7 @@ export const AutoInquiryPopup: React.FC<{ content: SiteContent["inquiryPopup"] }
               /* Success View */
               <div className="inquiry-compact-success">
                 <div className="inquiry-success-medallion">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C5A45D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B3945C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 </div>

@@ -14,7 +14,8 @@ export const ProductTile: React.FC<{
   isWishlisted: boolean;
   onToggleWishlist: (p: Product) => void;
   onAddToCart?: (p: Product, f: ProductFinish) => void;
-}> = ({ product, currency, isWishlisted, onToggleWishlist, onAddToCart }) => {
+  imageFit?: "cover" | "contain";
+}> = ({ product, currency, isWishlisted, onToggleWishlist, onAddToCart, imageFit }) => {
   const router = useRouter();
   return (
     <AudoCardItem
@@ -25,6 +26,7 @@ export const ProductTile: React.FC<{
       onQuickView={(p) => router.push(`/product/${p.id}`)}
       onAddToCart={onAddToCart}
       showDivider={false}
+      imageFit={imageFit}
     />
   );
 };

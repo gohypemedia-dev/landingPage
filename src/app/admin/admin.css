@@ -7,8 +7,8 @@
   --adm-border-strong: #cfcabd;
   --adm-text: #1d2328;
   --adm-muted: #6b7178;
-  --adm-navy: #102b46;
-  --adm-gold: #c5a45d;
+  --adm-navy: #102d40;
+  --adm-gold: #b3945c;
   --adm-ok: #1f7a4a;
   --adm-ok-bg: #e6f4ec;
   --adm-error: #b3261e;
@@ -61,12 +61,12 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 1.25rem 1rem;
+  gap: 1.25rem;
+  padding: 0.5rem 1rem 1.25rem;
   background: var(--adm-navy);
   color: #fff;
 }
-.adm-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; text-decoration: none; padding: 0.25rem 0.5rem 0; }
+.adm-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; text-decoration: none; padding: 0 0.5rem; }
 .adm-brand-logo { width: 100%; max-width: 190px; height: auto; }
 .adm-brand small { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.65; }
 .adm-login-logo { display: block; width: 220px; max-width: 100%; height: auto; margin-bottom: 1.5rem; }

@@ -58,7 +58,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           width: "100%",
           paddingTop: "105%",
           overflow: "hidden",
-          backgroundColor: "#F2EDE4",
+          backgroundColor: "var(--color-canvas, #F7F3EA)",
           cursor: "pointer",
           borderTopLeftRadius: "4px",
           borderTopRightRadius: "4px",
@@ -237,7 +237,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             justifyContent: "space-between",
             marginTop: "auto",
             paddingTop: "0.75rem",
-            borderTop: "1px solid rgba(16, 43, 70, 0.08)",
+            borderTop: "1px solid var(--color-card-border)",
           }}
         >
           <div
@@ -246,7 +246,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               fontFamily: "var(--font-sans)",
               fontSize: "1.0625rem",
               fontWeight: 700,
-              color: "var(--color-navy)",
+              color: "var(--color-burgundy, #9E151B)",
             }}
           >
             {formattedPrice}

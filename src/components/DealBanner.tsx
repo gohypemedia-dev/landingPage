@@ -30,7 +30,7 @@ export const TRUST_BADGES = [
     icon: (
       <>
         <path d="M24 4 8 10v12c0 10.2 6.8 18.8 16 22 9.2-3.2 16-11.8 16-22V10L24 4Z" fill="currentColor" stroke="none" />
-        <path d="m17 24 5 5 10-10" stroke="var(--trust-ink, #102B46)" strokeWidth="3.2" />
+        <path d="m17 24 5 5 10-10" stroke="var(--trust-ink, #102D40)" strokeWidth="3.2" />
       </>
     ),
   },
@@ -42,7 +42,7 @@ export const TRUST_BADGES = [
         <path d="M24 5 4 21h5v21h30V21h5L24 5Z" fill="currentColor" stroke="none" />
         <path
           d="M24 36s-7-4.4-7-9.2a3.8 3.8 0 0 1 7-2 3.8 3.8 0 0 1 7 2C31 31.6 24 36 24 36Z"
-          fill="var(--trust-ink, #102B46)"
+          fill="var(--trust-ink, #102D40)"
           stroke="none"
         />
       </>
@@ -65,7 +65,7 @@ export const TRUST_BADGES = [
     icon: (
       <>
         <path d="M25 4h17v17L22 41a3.5 3.5 0 0 1-5 0L7 31a3.5 3.5 0 0 1 0-5L25 4Z" fill="currentColor" stroke="none" />
-        <circle cx="34" cy="12" r="3.2" fill="var(--trust-ink, #102B46)" stroke="none" />
+        <circle cx="34" cy="12" r="3.2" fill="var(--trust-ink, #102D40)" stroke="none" />
       </>
     ),
   },
@@ -79,7 +79,7 @@ export const TRUST_BADGES = [
           fill="currentColor"
           stroke="none"
         />
-        <text x="24" y="28.6" textAnchor="middle" fontSize="12.5" fontWeight="800" fontFamily="var(--font-sans)" fill="var(--trust-ink, #102B46)" stroke="none">
+        <text x="24" y="28.6" textAnchor="middle" fontSize="12.5" fontWeight="800" fontFamily="var(--font-sans)" fill="var(--trust-ink, #102D40)" stroke="none">
           0%
         </text>
       </>

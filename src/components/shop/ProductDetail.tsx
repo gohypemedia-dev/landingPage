@@ -22,6 +22,29 @@ const CATEGORY_PAGES: Record<string, { label: string; href: string }> = {
 // Close-up focus points for feature thumbnails when no dedicated feature photo exists
 const FEATURE_FOCUS = ["35% 30%", "30% 75%", "68% 35%", "65% 78%"];
 
+// Best-matching images from public/new images for the Similar Products row
+const SIMILAR_PRODUCT_IMAGES: Record<string, string> = {
+  "contemporary-comfort-sofa": "/new images/sofas1.jpeg",
+  "aurelia-wave-sofa": "/new images/sofas6.jpeg",
+  "penthouse-modular-sectional": "/new images/sofas2.jpeg",
+  "royal-navy-tufted-suite": "/new images/sofas3.jpeg",
+  "elysian-grand-living-suite": "/new images/sofas5.jpeg",
+  "eave-modular-sofa": "/new images/sofas4.jpeg",
+  "cloudcomfort-motorized-recliner": "/new images/Recliners.jpeg",
+  "heritage-teakwood-king-cot": "/new images/WhatsApp Image 2026-11-25 at 16.58.36.jpeg",
+  "serenity-tufted-king-bed": "/new images/WhatsApp Image 2026-11-25 at 16.58.34.jpeg",
+  "italian-marble-dining-table": "/new images/WhatsApp Image 2026-11-25 at 16.58.53 (1).jpeg",
+  "plinth-natural-stone-table": "/new images/WhatsApp Image 2026-11-25 at 16.58.53.jpeg",
+};
+
+const SIMILAR_CATEGORY_IMAGES: Partial<Record<Product["category"], string>> = {
+  sofas: "/new images/sofas7.jpeg",
+  recliners: "/new images/Recliners.jpeg",
+  beds: "/new images/WhatsApp Image 2026-11-25 at 16.58.36.jpeg",
+  dining: "/new images/WhatsApp Image 2026-11-25 at 16.58.53.jpeg",
+  furniture: "/new images/WhatsApp Image 2026-11-25 at 16.58.32.jpeg",
+};
+
 const TABS = ["Description", "Product Features", "More Information", "Ratings & Reviews"] as const;
 type Tab = (typeof TABS)[number];
 
@@ -85,7 +108,19 @@ const ProductDetailBody: React.FC<{
   ];
 
   const related = PRODUCTS.filter((p) => p.id !== product.id && p.category === product.category);
-  const moreToExplore = related.length >= 2 ? related : PRODUCTS.filter((p) => p.id !== product.id && p.featured);
+  const moreToExplore = useMemo(() => {
+    const base = related.length >= 2 ? related : PRODUCTS.filter((p) => p.id !== product.id && p.featured);
+    return base.map((p) => {
+      const similarImage = SIMILAR_PRODUCT_IMAGES[p.id] ?? SIMILAR_CATEGORY_IMAGES[p.category];
+      if (!similarImage) return p;
+      return {
+        ...p,
+        primaryImage: similarImage,
+        hoverImage: undefined,
+        finishes: p.finishes.map((f, idx) => (idx === 0 ? { ...f, image: undefined } : f)),
+      };
+    });
+  }, [PRODUCTS, product.id, related]);
 
   const whatsappUrl = getWhatsAppEnquiryUrl(
     `${product.name} × ${qty}`,

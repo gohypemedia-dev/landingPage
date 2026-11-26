@@ -109,59 +109,197 @@ export const ShowroomPageClient: React.FC = () => (
           </div>
         </section>
 
-        {/* Multi-Zone Experience Tour & Logistics Pavilion */}
-        <section className="showroom-tour-section">
+        {/* About & Leadership Experience Section */}
+        <section className="showroom-tour-section" style={{ padding: "5rem 0", backgroundColor: "var(--color-canvas)", borderTop: "1px solid var(--color-card-border)", borderBottom: "1px solid var(--color-card-border)" }}>
           <div className="container">
             <div className="showroom-tour-grid">
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                <div style={{ position: "relative", height: "230px", borderRadius: "10px", overflow: "hidden", boxShadow: "0 15px 35px rgba(16,43,70,0.12)" }}>
+              {/* Leadership / Founders Portrait Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1.25rem" }}>
+                {/* Founder Card */}
+                <div
+                  style={{
+                    position: "relative",
+                    aspectRatio: "3 / 4",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    boxShadow: "0 15px 35px rgba(16, 45, 64, 0.12)",
+                    border: "1px solid var(--color-card-border)",
+                    backgroundColor: "var(--color-card)",
+                  }}
+                >
                   <Image
-                    src="/images/mf-showroom-warehouse.jpg"
-                    alt="Mallikarjuna Furniture World Multi-Floor Experience Tour and Warehouse Facility"
+                    src="/images/about-founder.jpg"
+                    alt="Founder & Chairman - Mallikarjuna Furniture World Kurnool"
                     fill
-                    sizes="(max-width: 992px) 100vw, 50vw"
-                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 900px) 50vw, 25vw"
+                    style={{ objectFit: "cover", objectPosition: "top center" }}
                   />
-                  <div style={{ position: "absolute", bottom: "0.75rem", left: "1rem", background: "rgba(16,43,70,0.75)", backdropFilter: "blur(6px)", padding: "0.3rem 0.75rem", borderRadius: "4px", fontSize: "0.6875rem", color: "#FFFFFF", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                    Warehouse & Dispatch Logistics
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "linear-gradient(180deg, transparent 55%, rgba(16, 45, 64, 0.88) 100%)",
+                      pointerEvents: "none",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "0.85rem",
+                      left: "0.75rem",
+                      right: "0.75rem",
+                      background: "rgba(16, 45, 64, 0.88)",
+                      backdropFilter: "blur(8px)",
+                      WebkitBackdropFilter: "blur(8px)",
+                      padding: "0.5rem 0.65rem",
+                      borderRadius: "6px",
+                      border: "1px solid rgba(179, 148, 92, 0.4)",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div style={{ fontSize: "0.625rem", color: "var(--color-gold)", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.15rem" }}>
+                      FOUNDER &amp; CHAIRMAN
+                    </div>
+                    <div style={{ fontSize: "0.8rem", color: "#FFFFFF", fontWeight: 600, letterSpacing: "0.02em" }}>
+                      Mallikarjuna Furniture World
+                    </div>
                   </div>
                 </div>
-                <div style={{ position: "relative", height: "230px", borderRadius: "10px", overflow: "hidden", boxShadow: "0 15px 35px rgba(16,43,70,0.12)" }}>
+
+                {/* Director Card */}
+                <div
+                  style={{
+                    position: "relative",
+                    aspectRatio: "3 / 4",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    boxShadow: "0 15px 35px rgba(16, 45, 64, 0.12)",
+                    border: "1px solid var(--color-card-border)",
+                    backgroundColor: "var(--color-card)",
+                  }}
+                >
                   <Image
-                    src="/images/mf-showroom-gallery-wood.jpg"
-                    alt="Mallikarjuna Furniture World Live Kurnool Showroom Woodcraft Gallery"
+                    src="/images/about-director.jpg"
+                    alt="Managing Director & Design Leadership - Mallikarjuna Furniture World Kurnool"
                     fill
-                    sizes="(max-width: 992px) 100vw, 50vw"
-                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 900px) 50vw, 25vw"
+                    style={{ objectFit: "cover", objectPosition: "top center" }}
                   />
-                  <div style={{ position: "absolute", bottom: "0.75rem", left: "1rem", background: "rgba(16,43,70,0.75)", backdropFilter: "blur(6px)", padding: "0.3rem 0.75rem", borderRadius: "4px", fontSize: "0.6875rem", color: "#FFFFFF", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                    Live Woodcraft & Material Studio
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "linear-gradient(180deg, transparent 55%, rgba(16, 45, 64, 0.88) 100%)",
+                      pointerEvents: "none",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "0.85rem",
+                      left: "0.75rem",
+                      right: "0.75rem",
+                      background: "rgba(16, 45, 64, 0.88)",
+                      backdropFilter: "blur(8px)",
+                      WebkitBackdropFilter: "blur(8px)",
+                      padding: "0.5rem 0.65rem",
+                      borderRadius: "6px",
+                      border: "1px solid rgba(179, 148, 92, 0.4)",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div style={{ fontSize: "0.625rem", color: "var(--color-gold)", letterSpacing: "0.12em", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.15rem" }}>
+                      MANAGING DIRECTOR
+                    </div>
+                    <div style={{ fontSize: "0.8rem", color: "#FFFFFF", fontWeight: 600, letterSpacing: "0.02em" }}>
+                      Leadership &amp; Design Innovation
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* About Content & Heritage Story */}
               <div>
-                <span style={{ fontSize: "0.6875rem", letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, color: "var(--color-gold)", display: "block", marginBottom: "0.75rem" }}>
-                  MULTI-FLOOR LIVING EXPERIENCE
-                </span>
-                <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "2.4rem", color: "var(--color-navy)", fontWeight: 300, lineHeight: 1.2, marginBottom: "1.25rem" }}>
-                  From Raw Teakwood to Your Living Room
+                <h2
+                  style={{
+                    fontFamily: "var(--font-serif)",
+                    fontSize: "clamp(2rem, 3.2vw, 2.65rem)",
+                    color: "var(--color-navy)",
+                    fontWeight: 400,
+                    lineHeight: 1.2,
+                    marginBottom: "1.25rem",
+                  }}
+                >
+                  Generations of Trust, Artisan Teakwood &amp; Timeless Elegance
                 </h2>
-                <p style={{ color: "var(--color-text-secondary)", fontSize: "1rem", lineHeight: 1.7, fontWeight: 300, marginBottom: "1.5rem" }}>
-                  Our Kurnool premises span a complete multi-zone luxury experience: curated living galleries, an ergonomic recliner trial lounge, a 500+ fabric upholstery studio, and our state-of-the-art dispatch warehouse ensuring rapid delivery across Kurnool, Nandyal, and Dhone.
+                <p
+                  style={{
+                    color: "var(--color-text-body)",
+                    fontSize: "0.95rem",
+                    lineHeight: 1.75,
+                    fontWeight: 400,
+                    marginBottom: "1rem",
+                  }}
+                >
+                  Founded in Kurnool with a steadfast commitment to artisan excellence, Mallikarjuna Furniture World stands as Rayalaseema&apos;s premier destination for bespoke luxury living. What began as a master woodworking studio has blossomed into a 15,000+ sq. ft. multi-floor flagship gallery, rooted in authentic Indian values, heirloom durability, and modern European aesthetics.
                 </p>
-                <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+                <p
+                  style={{
+                    color: "var(--color-text-secondary)",
+                    fontSize: "0.9rem",
+                    lineHeight: 1.7,
+                    fontWeight: 300,
+                    marginBottom: "1.75rem",
+                  }}
+                >
+                  Under our founding leadership and next-generation vision, we marry hand-planed Burma teakwood joinery with imported Italian marbles, certified ergonomic recliners, and 500+ designer fabrics—curated to transform houses into enduring family sanctuaries across Kurnool, Nandyal, Dhone, and Andhra Pradesh.
+                </p>
+
+                {/* Metrics Grid */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "1.5rem",
+                    marginBottom: "2rem",
+                    borderTop: "1px solid var(--color-card-border)",
+                    paddingTop: "1.25rem",
+                  }}
+                >
                   <div>
-                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.75rem", color: "var(--color-navy)", display: "block", fontWeight: 600 }}>15,000+</span>
-                    <span style={{ fontSize: "0.75rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-secondary)" }}>Sq. Ft. Display</span>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.85rem", color: "var(--color-burgundy)", display: "block", fontWeight: 600, lineHeight: 1.1 }}>25+</span>
+                    <span style={{ fontSize: "0.72rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-navy)", fontWeight: 600 }}>Years of Trust</span>
                   </div>
                   <div>
-                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.75rem", color: "var(--color-navy)", display: "block", fontWeight: 600 }}>500+</span>
-                    <span style={{ fontSize: "0.75rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-secondary)" }}>Ready Designs</span>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.85rem", color: "var(--color-burgundy)", display: "block", fontWeight: 600, lineHeight: 1.1 }}>15,000+</span>
+                    <span style={{ fontSize: "0.72rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-navy)", fontWeight: 600 }}>Sq. Ft. Display</span>
                   </div>
                   <div>
-                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.75rem", color: "var(--color-navy)", display: "block", fontWeight: 600 }}>24hr</span>
-                    <span style={{ fontSize: "0.75rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-secondary)" }}>Kurnool Delivery</span>
+                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.85rem", color: "var(--color-burgundy)", display: "block", fontWeight: 600, lineHeight: 1.1 }}>10,000+</span>
+                    <span style={{ fontSize: "0.72rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-navy)", fontWeight: 600 }}>Happy Homes</span>
                   </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
+                  <a
+                    href={getShowroomBookingWhatsAppUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary"
+                    style={{ padding: "0.85rem 1.65rem", borderRadius: "6px", fontSize: "0.75rem" }}
+                  >
+                    <span>Connect with Leadership</span>
+                  </a>
+                  <a
+                    href={SHOWROOM_INFO.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary"
+                    style={{ padding: "0.85rem 1.5rem", borderRadius: "6px", fontSize: "0.75rem" }}
+                  >
+                    <span>Visit Showroom</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -172,19 +310,6 @@ export const ShowroomPageClient: React.FC = () => (
         <section style={{ padding: "5rem 0", backgroundColor: "var(--color-canvas)" }}>
           <div className="container">
             <div style={{ textAlign: "center", maxWidth: "680px", margin: "0 auto 3rem" }}>
-              <span
-                style={{
-                  fontSize: "0.6875rem",
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
-                  color: "var(--color-gold)",
-                  display: "block",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                WHAT TO EXPECT
-              </span>
               <h2
                 style={{
                   fontFamily: "var(--font-serif)",

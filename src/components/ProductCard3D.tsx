@@ -64,8 +64,8 @@ export const ProductCard3D: React.FC<ProductCard3DProps> = ({
           width="14"
           height="14"
           viewBox="0 0 24 24"
-          fill={isWishlisted ? "#111" : "none"}
-          stroke="#111"
+          fill={isWishlisted ? "var(--color-gold)" : "none"}
+          stroke={isWishlisted ? "var(--color-gold)" : "var(--color-navy)"}
           strokeWidth="1.6"
           strokeLinejoin="round"
         >

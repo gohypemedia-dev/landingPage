@@ -100,13 +100,27 @@ export const Header: React.FC<HeaderProps> = ({
 
   // Category row: International Collection, one item per room (dropdown when a room has several categories), New Arrivals.
   // Hover opens on desktop; a click/tap also opens (touch screens). Clicking outside or Escape closes.
+  const newestProductImage =
+    [...catalog.products].sort((a, b) => b.year - a.year)[0]?.primaryImage ?? "/images/mf-fluted-luxury-lounge.jpg";
   const navMenus = [
-    { key: "international", label: "International", items: internationalItems, href: undefined as string | undefined },
+    {
+      key: "international",
+      label: "International",
+      items: internationalItems,
+      href: undefined as string | undefined,
+      image: internationalItems[0]?.image ?? "/images/mf-showroom-warehouse.jpg",
+    },
     ...ROOMS.map((r) => {
       const items = shopCategories.filter((c) => c.room === r.key);
-      return { key: r.key as string, label: r.label, items, href: items.length === 1 ? items[0].href : undefined };
+      return {
+        key: r.key as string,
+        label: r.label,
+        items,
+        href: items.length === 1 ? items[0].href : undefined,
+        image: items[0]?.image ?? newestProductImage,
+      };
     }),
-    { key: "new-arrivals", label: "New Arrivals", items: [], href: "/furniture" },
+    { key: "new-arrivals", label: "New Arrivals", items: [], href: "/furniture", image: newestProductImage },
   ];
 
   // Underline the menu for the page you're on (a dropdown counts when any of its links matches)
@@ -181,6 +195,9 @@ export const Header: React.FC<HeaderProps> = ({
                       <div className="nav-mega">
                         {menu.items.map((item) => (
                           <Link key={item.href} href={item.href} className="nav-mega-item" onClick={() => setOpenMenu(null)}>
+                            <span className="nav-mega-img">
+                              <Image src={item.image} alt="" fill sizes="52px" style={{ objectFit: "cover" }} />
+                            </span>
                             <span className="nav-mega-text">
                               <strong>{item.label}</strong>
                               <small>{item.count}</small>
@@ -249,8 +266,8 @@ export const Header: React.FC<HeaderProps> = ({
                       position: "absolute",
                       top: "-4px",
                       right: "-4px",
-                      background: "var(--color-gold)",
-                      color: "#102B46",
+                      background: "var(--color-burgundy)",
+                      color: "#FFFFFF",
                       fontSize: "0.5625rem",
                       fontWeight: 700,
                       width: "15px",
@@ -302,7 +319,10 @@ export const Header: React.FC<HeaderProps> = ({
               {navMenus.map((menu) =>
                 menu.href ? (
                   <Link key={menu.key} href={menu.href} onClick={closeMobileMenu} className={`mnav-row${isActive(menu) ? " is-current" : ""}`}>
-                    <span>{menu.label}</span>
+                    <span className="mnav-row-img">
+                      <Image src={menu.image} alt="" fill sizes="40px" style={{ objectFit: "cover" }} />
+                    </span>
+                    <span className="mnav-row-label">{menu.label}</span>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                       <path d="M9 18l6-6-6-6" />
                     </svg>
@@ -315,7 +335,10 @@ export const Header: React.FC<HeaderProps> = ({
                       aria-expanded={mobileOpen === menu.key}
                       onClick={() => setMobileOpen((k) => (k === menu.key ? null : menu.key))}
                     >
-                      <span>{menu.label}</span>
+                      <span className="mnav-row-img">
+                        <Image src={menu.image} alt="" fill sizes="40px" style={{ objectFit: "cover" }} />
+                      </span>
+                      <span className="mnav-row-label">{menu.label}</span>
                       <svg className="mnav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                         <path d="M6 9l6 6 6-6" />
                       </svg>

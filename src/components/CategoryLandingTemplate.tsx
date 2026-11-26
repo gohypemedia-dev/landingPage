@@ -30,15 +30,18 @@ export interface CategoryLandingProps {
   /** Collection pages pass their own product list (kept in this order) and banner */
   products?: Product[];
   heroImage?: string;
+  productImageFit?: "cover" | "contain";
+  productImageOverride?: string;
 }
 
-// Banner image per category
+// Banner image per category (fallback when no category photo is set in catalog)
 const HERO_IMAGES: Record<string, string> = {
   sofas: "/images/mf-signature-curved-living.jpg",
   recliners: "/images/catalogue-recliner-featured.jpg",
   beds: "/images/796767853_18093958568640692_8492671734547745348_n.webp",
   dining: "/images/dining-space.jpg",
   curtains: "/images/banner-living.jpg",
+  mattresses: "/images/bedroom-space.jpg",
 };
 const DEFAULT_HERO = "/images/showroom-kurnool-main.jpg";
 
@@ -52,22 +55,39 @@ const PRICE_FILTERS = [
 const priceOf = (p: Product) => p.priceINR ?? p.priceUSD * 83.5;
 
 export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
+  categorySlug,
   categoryName,
   introduction,
   filterCategoryKey,
   seoFaqs,
   products,
   heroImage: heroOverride,
+  productImageFit,
+  productImageOverride,
 }) => {
   const [priceFilter, setPriceFilter] = useState("all");
   const [sort, setSort] = useState("featured");
   const [inStockOnly, setInStockOnly] = useState(false);
 
-  const heroImage = heroOverride || (filterCategoryKey && HERO_IMAGES[filterCategoryKey]) || DEFAULT_HERO;
   // Some pages are already named "All …" (e.g. "All Furniture"), so don't prefix it again
   const baseName = categoryName.replace(/^All\s+/i, "");
 
   const catalog = useCatalog();
+  const catalogCategory = useMemo(
+    () =>
+      catalog.categories.find(
+        (c) =>
+          (filterCategoryKey && c.slug === filterCategoryKey) ||
+          c.href === `/${categorySlug}` ||
+          c.slug === categorySlug,
+      ),
+    [catalog.categories, filterCategoryKey, categorySlug],
+  );
+  const heroImage =
+    heroOverride ||
+    catalogCategory?.image ||
+    (filterCategoryKey && HERO_IMAGES[filterCategoryKey]) ||
+    DEFAULT_HERO;
   const categoryProducts = useMemo(
     () => products ?? (filterCategoryKey ? productsInCategory(catalog, filterCategoryKey) : catalog.products),
     [products, filterCategoryKey, catalog]
@@ -125,65 +145,76 @@ export const CategoryLandingTemplate: React.FC<CategoryLandingProps> = ({
 
           {/* Full grid with filters */}
           {categoryProducts.length > 0 && (
-          <section id="all-products" className="cl-all">
-            <div className="cl-toolbar">
-              <h2 className="shop-h2">All {baseName}</h2>
-              <div className="cl-filters">
-                <div className="cl-chips" role="group" aria-label="Filter by price">
-                  {PRICE_FILTERS.map((f) => (
-                    <button
-                      key={f.key}
-                      type="button"
-                      className={priceFilter === f.key ? "is-active" : undefined}
-                      onClick={() => setPriceFilter(f.key)}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
+            <section id="all-products" className="cl-all">
+              <div className="cl-toolbar">
+                <h2 className="shop-h2">All {baseName}</h2>
+                <div className="cl-filters">
+                  <div className="cl-chips" role="group" aria-label="Filter by price">
+                    {PRICE_FILTERS.map((f) => (
+                      <button
+                        key={f.key}
+                        type="button"
+                        className={priceFilter === f.key ? "is-active" : undefined}
+                        onClick={() => setPriceFilter(f.key)}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                  <label className="cl-check">
+                    <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
+                    In stock
+                  </label>
+                  <label className="cl-sort">
+                    Sort by
+                    <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                      <option value="featured">Recommended</option>
+                      <option value="new">Newest</option>
+                      <option value="price-asc">Price: Low to High</option>
+                      <option value="price-desc">Price: High to Low</option>
+                      <option value="rating">Top Rated</option>
+                    </select>
+                  </label>
                 </div>
-                <label className="cl-check">
-                  <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
-                  In stock
-                </label>
-                <label className="cl-sort">
-                  Sort by
-                  <select value={sort} onChange={(e) => setSort(e.target.value)}>
-                    <option value="featured">Recommended</option>
-                    <option value="new">Newest</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                    <option value="rating">Top Rated</option>
-                  </select>
-                </label>
               </div>
-            </div>
 
-            <p className="cl-count">
-              Showing {gridProducts.length} of {categoryProducts.length} designs
-            </p>
+              <p className="cl-count">
+                Showing {gridProducts.length} of {categoryProducts.length} designs
+              </p>
 
-            {gridProducts.length > 0 ? (
-              <div className="cl-grid">
-                {gridProducts.map((p) => (
-                  <ProductTile
-                    key={p.id}
-                    product={p}
-                    currency={currency}
-                    isWishlisted={wishlistIds.includes(p.id)}
-                    onToggleWishlist={toggleWishlist}
-                    onAddToCart={(prod, f) => addToEnquiry(prod, f)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="cl-empty">
-                <p>No designs match these filters.</p>
-                <button type="button" onClick={() => { setPriceFilter("all"); setInStockOnly(false); }}>
-                  Clear filters
-                </button>
-              </div>
-            )}
-          </section>
+              {gridProducts.length > 0 ? (
+                <div className="cl-grid">
+                  {gridProducts.map((p) => {
+                    const cardProduct = productImageOverride
+                      ? {
+                        ...p,
+                        primaryImage: productImageOverride,
+                        hoverImage: undefined,
+                        finishes: p.finishes.map((f, idx) => (idx === 0 ? { ...f, image: undefined } : f)),
+                      }
+                      : p;
+                    return (
+                      <ProductTile
+                        key={p.id}
+                        product={cardProduct}
+                        currency={currency}
+                        isWishlisted={wishlistIds.includes(p.id)}
+                        onToggleWishlist={toggleWishlist}
+                        onAddToCart={(prod, f) => addToEnquiry(prod, f)}
+                        imageFit={productImageFit}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="cl-empty">
+                  <p>No designs match these filters.</p>
+                  <button type="button" onClick={() => { setPriceFilter("all"); setInStockOnly(false); }}>
+                    Clear filters
+                  </button>
+                </div>
+              )}
+            </section>
           )}
 
           {/* SEO content, comparison table & FAQs */}

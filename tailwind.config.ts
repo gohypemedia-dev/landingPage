@@ -10,18 +10,32 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: "#102B46",
-          dark: "#0c2136",
-          light: "#1c3b5d",
+          DEFAULT: "#102D40",
+          dark: "#0A1E2C",
+          light: "#1A3E56",
+        },
+        burgundy: {
+          DEFAULT: "#9E151B",
+          hover: "#7E1015",
+          dark: "#660B0F",
+          light: "#B82229",
         },
         gold: {
-          DEFAULT: "#C5A45D",
-          hover: "#b08f48",
-          light: "#e2caa0",
+          DEFAULT: "#B3945C",
+          hover: "#9A7D49",
+          light: "#CBB284",
+          subtle: "rgba(179, 148, 92, 0.25)",
+        },
+        cream: {
+          DEFAULT: "#FAF6EF",
+        },
+        beige: {
+          DEFAULT: "#E9DDCB",
+          dark: "#DCCFBA",
         },
         ivory: {
-          DEFAULT: "#F7F3EA",
-          dark: "#EFE9DD",
+          DEFAULT: "#FAF6EF",
+          dark: "#E9DDCB",
         },
         charcoal: "#252B30",
         whatsapp: {

@@ -10,7 +10,7 @@ const Diya = () => (
   <svg viewBox="0 0 64 48" aria-hidden="true">
     <path d="M32 4c4 6 6 10 6 13a6 6 0 0 1-12 0c0-3 2-7 6-13Z" fill="#F6C453" />
     <path d="M32 11c2 3 3 5 3 6.5a3 3 0 0 1-6 0c0-1.5 1-3.5 3-6.5Z" fill="#FFF3C4" />
-    <path d="M4 28h56c-2 10-13 16-28 16S6 38 4 28Z" fill="#C5A45D" />
+    <path d="M4 28h56c-2 10-13 16-28 16S6 38 4 28Z" fill="#B3945C" />
     <path d="M4 28h56c-.5 2-1.4 3.8-2.6 5.4H6.6C5.4 31.8 4.5 30 4 28Z" fill="#E6CB86" />
   </svg>
 );

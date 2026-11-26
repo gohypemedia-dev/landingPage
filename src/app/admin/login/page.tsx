@@ -16,10 +16,10 @@ export default function LoginPage() {
     <main className="adm-login">
       <div className="adm-login-card">
         <Image
-          src="/images/mallikarjuna-logo.png"
+          src="/images/mallikarjuna-new-logo.png"
           alt={SHOWROOM_INFO.brandName}
-          width={1384}
-          height={359}
+          width={963}
+          height={212}
           sizes="220px"
           className="adm-login-logo"
           priority

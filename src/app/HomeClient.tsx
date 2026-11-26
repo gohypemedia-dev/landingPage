@@ -13,6 +13,7 @@ import { AtmosphereShowcase } from "@/components/AtmosphereShowcase";
 import { Footer } from "@/components/Footer";
 import { StoryCards } from "@/components/StoryCards";
 import { Testimonials } from "@/components/Testimonials";
+import { CaseStudySection } from "@/components/CaseStudySection";
 import { HomeFaqs } from "@/components/HomeFaqs";
 import { ShopByLook } from "@/components/ShopByLook";
 import { PopularCategories } from "@/components/PopularCategories";
@@ -128,7 +129,7 @@ export function HomeClient() {
       {/* Luxury Custom Pointer */}
       <CustomCursor />
 
-      {/* 1. Navigation Header (Solid Navy #102B46 + Gold Badge & Wordmark) */}
+      {/* 1. Navigation Header (Solid Navy #102D40 + Burgundy & Gold Accents) */}
       <Header
         currency={currency}
         onCurrencyChange={setCurrency}
@@ -186,6 +187,9 @@ export function HomeClient() {
         {/* FAQs, then customer testimonials */}
         {content.faqs.enabled && <HomeFaqs />}
         {content.testimonials.enabled && <Testimonials />}
+
+        {/* Case Study horizontal marquee */}
+        <CaseStudySection />
 
         {content.storyCards.enabled && <StoryCards />}
       </main>

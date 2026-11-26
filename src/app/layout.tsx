@@ -65,7 +65,7 @@ export default async function RootLayout({
     name: SHOWROOM_INFO.brandName,
     alternateName: "Mallikarjuna Furniture World Kurnool",
     image: "https://casablancasofas.com/og.jpg",
-    logo: "https://casablancasofas.com/images/mallikarjuna-logo.png",
+    logo: "https://casablancasofas.com/images/mallikarjuna-new-logo.png",
     telephone: SHOWROOM_INFO.phone,
     email: SHOWROOM_INFO.email,
     address: {

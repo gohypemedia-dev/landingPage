@@ -32,6 +32,7 @@ export const AudoCardItem: React.FC<{
   onQuickView: (p: Product) => void;
   onAddToCart?: (p: Product, f: ProductFinish) => void;
   showDivider: boolean;
+  imageFit?: "cover" | "contain";
 }> = ({
   product,
   currency,
@@ -40,6 +41,7 @@ export const AudoCardItem: React.FC<{
   onQuickView,
   onAddToCart,
   showDivider,
+  imageFit = "cover",
 }) => {
   const [selectedFinish, setSelectedFinish] = useState<ProductFinish>(product.finishes[0]);
   const [isHovered, setIsHovered] = useState(false);
@@ -91,7 +93,7 @@ export const AudoCardItem: React.FC<{
               alt={product.name}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: imageFit }}
               priority
             />
           </div>
@@ -120,7 +122,7 @@ export const AudoCardItem: React.FC<{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: isWishlisted ? "var(--color-gold)" : "#102B46",
+              color: isWishlisted ? "var(--color-gold)" : "var(--color-navy, #102D40)",
               transition: "transform 0.2s ease, background 0.2s ease, color 0.2s ease",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.12)")}
@@ -199,10 +201,10 @@ export const AudoCardItem: React.FC<{
               fontFamily: "var(--font-sans)",
               fontSize: "10px",
               lineHeight: 1.25,
-              fontWeight: 400,
+              fontWeight: 500,
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "#111111",
+              color: "var(--color-navy, #102D40)",
               textAlign: "center",
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -220,7 +222,8 @@ export const AudoCardItem: React.FC<{
               fontSize: "10px",
               lineHeight: 1.25,
               letterSpacing: "0.04em",
-              color: "#9A9A9A",
+              color: "var(--color-burgundy, #9E151B)",
+              fontWeight: 600,
               textAlign: "center",
               marginBottom: "8px",
             }}

@@ -37,10 +37,10 @@ export function AdminNav({
     <aside className="adm-sidebar">
       <Link href="/admin" className="adm-brand">
         <Image
-          src="/images/mallikarjuna-logo-light.png"
+          src="/images/mallikarjuna-new-logo-light.png"
           alt="Mallikarjuna Furniture World"
-          width={1384}
-          height={359}
+          width={963}
+          height={212}
           sizes="200px"
           className="adm-brand-logo"
           priority

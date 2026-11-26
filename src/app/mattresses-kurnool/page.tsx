@@ -21,7 +21,6 @@ export default async function MattressesKurnoolPage() {
       introduction="Experience deep, restorative sleep free from partner motion disturbance. Our orthopedic sleep systems combine high-tensile carbon pocket springs with natural breathable latex layers to support your spine naturally."
       categoryTiles={tiles}
       products={categoryProducts(await getCatalog(), "mattresses")}
-      heroImage="/images/bedroom-space.jpg"
     />
   );
 }
