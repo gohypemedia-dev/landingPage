@@ -6,7 +6,6 @@ import { getCatalog } from "@/lib/server/catalog";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 
 // Categories added later in the admin render on first visit.
-export const dynamicParams = true;
 export async function generateStaticParams() {
   return ownPageCategories(await getCatalog()).map((c) => ({ slug: c.slug }));
 }

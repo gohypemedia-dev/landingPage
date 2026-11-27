@@ -5,7 +5,6 @@ import { COLLECTIONS, getCollectionProducts } from "@/data/collections";
 import { CategoryLandingTemplate } from "@/components/CategoryLandingTemplate";
 import { getCatalog } from "@/lib/server/catalog";
 
-export const dynamicParams = true;
 export function generateStaticParams() {
   return COLLECTIONS.map((c) => ({ slug: c.slug }));
 }
